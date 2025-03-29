@@ -20,13 +20,13 @@ class _FiguresSectionState extends State<FiguresSection> {
     },
     {
       'id': 2,
-      'src': 'assets/images/image_3.png',
+      'src': 'assets/images/image_2.png',
       'alt': 'Clavicle Fracture Anatomy',
       'caption': 'Detailed anatomical view showing nerves and blood vessels around clavicle fracture',
     },
     {
       'id': 3,
-      'src': 'assets/images/image_5.jpg',
+      'src': 'assets/images/image_3.jpg',
       'alt': 'X-ray of Broken Collarbone',
       'caption': 'X-ray image showing a clear fracture in the collarbone',
     },
