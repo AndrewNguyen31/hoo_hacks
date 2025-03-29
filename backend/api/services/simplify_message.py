@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from google import genai
 from google import generativeai
 
 
@@ -49,7 +48,7 @@ class SimplifyMessage:
         self.gemini_model = generativeai.GenerativeModel('gemini-2.0-flash')
 
     def simplify_message(self, message) -> str:
-        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Here is the medical text: " + message
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Remember, you are only simplifying the message. Do not include thought process or rationale. Just return a simplified version of the input message.  Here is the medical text: " + message
 
         try:
             response = self.gemini_model.generate_content(instruction)
