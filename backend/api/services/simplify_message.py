@@ -48,7 +48,11 @@ class SimplifyMessage:
         self.gemini_model = generativeai.GenerativeModel('gemini-2.0-flash')
 
     def simplify_message(self, message) -> str:
-        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Remember, you are only simplifying the message. Do not include thought process or rationale. Just return a simplified version of the input message.  Here is the medical text: " + message
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Remember, you are only simplifying the message. Do not include thought process or rationale. Just return a simplified version of the input message and remember to be sensitive to the patients feelings when writing the simplified message.  Here is the medical text: " + message
+
+        few_shot_examples = "Here are some examples of how you should simplify medical messages: The imaging shows a localized malignant neoplasm in the left lung lobe, requiring biopsy for confirmation. --- SIMPLIFIED:The scan found a small area of cancer in your left lung. We need to do a test called a biopsy to be sure."
+
+        final_prompt = instruction + "\n\n" + few_shot_examples
 
         try:
             response = self.gemini_model.generate_content(instruction)
