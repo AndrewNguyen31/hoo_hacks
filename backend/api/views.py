@@ -5,6 +5,7 @@ from .services.simplify_message import SimplifyMessage
 from .services.translate_message import TranslateMessage
 
 import json
+import os
 
 text_similarity = TextSimilarity()
 simplify_message = SimplifyMessage()
@@ -17,10 +18,12 @@ def process_text(request):
         original_text = data.get('text', '')
         
         # Step 1: Simplify
-        simplified_text = simplify_message.simplify(original_text)
+        simplify_message.load_env()
+        simplified_text = simplify_message.simplify_message(original_text)
         
         # Step 2: Translate
-        translated_text = translate_message.translate(simplified_text)
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './api/hoo-hacks.json'
+        translated_text = translate_message.translate_text(simplified_text, "en")
         
         # Step 3: Calculate similarity
         similarity_score = text_similarity.calculate_similarity(original_text, translated_text)

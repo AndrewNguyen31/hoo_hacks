@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from google import genai
 from google import generativeai
 
 
@@ -56,5 +55,3 @@ class SimplifyMessage:
             return response.text
         except Exception as e:
             return f"An error occurred: {str(e)}"
-        
-        

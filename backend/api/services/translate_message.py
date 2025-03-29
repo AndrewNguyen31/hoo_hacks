@@ -2,9 +2,6 @@ from google.cloud import translate_v2 as translate
 import os
 
 class TranslateMessage:
-    def load_env(self):
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../../../hoo-hacks.json'  
-
     def translate_text(self, text, target_language='en'):
         translate_client = translate.Client()
         try:
