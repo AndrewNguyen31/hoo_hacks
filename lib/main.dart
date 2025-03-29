@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            SelectableText(
               'Original: $_text',
               style: TextStyle(fontSize: 18.0),
             ),
@@ -152,12 +152,12 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_isProcessing)
               CircularProgressIndicator()
             else ...[
-              Text(
+              SelectableText(
                 'Processed: $_processedText',
                 style: TextStyle(fontSize: 18.0, color: Colors.blue),
               ),
               SizedBox(height: 10),
-              Text(
+              SelectableText(
                 'Similarity Score: ${(_similarityScore * 100).toStringAsFixed(1)}%',
                 style: TextStyle(fontSize: 16.0, color: Colors.green),
               ),
