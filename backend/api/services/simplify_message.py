@@ -49,15 +49,12 @@ class SimplifyMessage:
         self.gemini_model = generativeai.GenerativeModel('gemini-2.0-flash')
 
     def simplify_message(self, message) -> str:
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Here is the medical text: " + message
+
         try:
-            response = self.gemini_model.generate_content(message)
+            response = self.gemini_model.generate_content(instruction)
             return response.text
         except Exception as e:
             return f"An error occurred: {str(e)}"
-
-if __name__ == "__main__":
-    simplify_message = SimplifyMessage()
-    simplify_message.load_env()
-    print(simplify_message.simplify_message("This is a test message."))
         
         
