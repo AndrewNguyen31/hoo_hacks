@@ -80,28 +80,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _processText(String text) async {
-     setState(() {
-       _isProcessing = true;
-     });
- 
-     try {
-       // Process through pipeline
-       final simplified = await _textService.simplifyText(text);
-       final translated = await _textService.translateText(simplified);
-       final score = await _textService.getSimilarityScore(translated);
- 
-       setState(() {
-         _processedText = translated;
-         _similarityScore = score;
-       });
-     } catch (e) {
-       print('Error processing text: $e');
-     } finally {
-       setState(() {
-         _isProcessing = false;
-       });
-     }
-   }
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      // Process through single API call
+      final result = await _textService.processText(text);
+      
+      setState(() {
+        _processedText = result['translated_text'];
+        _similarityScore = result['similarity_score'];
+      });
+    } catch (e) {
+      print('Error processing text: $e');
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
+  }
 
   void _listen() async {
     if (!_isListening) {
