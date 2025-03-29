@@ -1,5 +1,4 @@
 from google.cloud import translate_v2 as translate
-from dotenv import load_dotenv
 import os
 
 class TranslateMessage:
