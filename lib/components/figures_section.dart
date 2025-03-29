@@ -14,22 +14,22 @@ class _FiguresSectionState extends State<FiguresSection> {
   final List<Map<String, dynamic>> figures = [
     {
       'id': 1,
-      'icon': Icons.medical_services,
-      'alt': 'Medical translation in action',
-      'caption': 'Real-time translation during patient consultation',
+      'src': 'assets/images/image_1.jpg',
+      'alt': 'Broken Collarbone Illustration',
+      'caption': 'Anatomical illustration of a broken collarbone showing skeletal structure',
     },
-    // {
-    //   'id': 2,
-    //   'src': 'assets/images/hero_background.jpg',
-    //   'alt': 'MediSpeak mobile app',
-    //   'caption': 'MediSpeak mobile application interface',
-    // },
-    // {
-    //   'id': 3,
-    //   'src': 'assets/images/hero_background.jpg',
-    //   'alt': 'Language barrier statistics',
-    //   'caption': 'Impact of language barriers in healthcare',
-    // },
+    {
+      'id': 2,
+      'src': 'assets/images/image_3.png',
+      'alt': 'Clavicle Fracture Anatomy',
+      'caption': 'Detailed anatomical view showing nerves and blood vessels around clavicle fracture',
+    },
+    {
+      'id': 3,
+      'src': 'assets/images/image_5.jpg',
+      'alt': 'X-ray of Broken Collarbone',
+      'caption': 'X-ray image showing a clear fracture in the collarbone',
+    },
   ];
 
   void _scroll(String direction) {
@@ -55,7 +55,7 @@ class _FiguresSectionState extends State<FiguresSection> {
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Column(
         children: [
-          const Text(
+          const SelectableText(
             'Figures & Illustrations',
             style: TextStyle(
               fontSize: 24,
@@ -87,7 +87,7 @@ class _FiguresSectionState extends State<FiguresSection> {
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 400,
+            height: 600,
             child: ListView.builder(
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
@@ -95,24 +95,52 @@ class _FiguresSectionState extends State<FiguresSection> {
               itemBuilder: (context, index) {
                 final figure = figures[index];
                 return Container(
-                  width: 300,
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  width: 500,
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
                   child: Column(
                     children: [
-                      Image.asset(
-                        figure['src'],
-                        height: 300,
-                        width: 300,
-                        fit: BoxFit.cover,
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                        child: figure['src'] != null 
+                          ? Image.asset(
+                              figure['src'],
+                              height: 450,
+                              width: 500,
+                              fit: BoxFit.contain,
+                            )
+                          : Icon(
+                              Icons.image,
+                              size: 450,
+                              color: Theme.of(context).primaryColor,
+                            ),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        figure['caption'],
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
                         ),
-                        textAlign: TextAlign.center,
+                        child: SelectableText(
+                          figure['caption'] ?? '',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   ),
