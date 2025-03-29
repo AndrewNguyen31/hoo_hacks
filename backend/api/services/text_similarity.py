@@ -1,5 +1,4 @@
 import numpy as np
-
 from sentence_transformers import SentenceTransformer
 
 class TextSimilarity:
@@ -31,3 +30,4 @@ class TextSimilarity:
                          (np.linalg.norm(embedding1) * np.linalg.norm(embedding2)))
             
         return similarity
+    
