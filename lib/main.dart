@@ -133,7 +133,16 @@ class _MyHomePageState extends State<MyHomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const HeroWidget(),
+              HeroWidget(
+                onTextSubmit: (text) {
+                  setState(() {
+                    _text = text;
+                  });
+                  _processText(text);
+                },
+                onMicPressed: _listen,
+                isListening: _isListening,
+              ),
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -168,21 +177,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: FloatingActionButton(
-            onPressed: _listen,
-            tooltip: 'Listen',
-            backgroundColor: _isListening ? Colors.red : Colors.blue,
-            elevation: 8.0,
-            child: Icon(
-              _isListening ? Icons.mic : Icons.mic_none,
-              color: Colors.white,
-              size: 32.0,
-            ),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
