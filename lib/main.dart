@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'services/text_processing_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,9 +57,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final stt.SpeechToText _speech = stt.SpeechToText();
+  final TextProcessingService _textService = TextProcessingService();
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
+  String _processedText = '';
+  double _similarityScore = 0.0;
   bool _speechEnabled = false;
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -74,15 +79,43 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  Future<void> _processText(String text) async {
+     setState(() {
+       _isProcessing = true;
+     });
+ 
+     try {
+       // Process through pipeline
+       final simplified = await _textService.simplifyText(text);
+       final translated = await _textService.translateText(simplified);
+       final score = await _textService.getSimilarityScore(translated);
+ 
+       setState(() {
+         _processedText = translated;
+         _similarityScore = score;
+       });
+     } catch (e) {
+       print('Error processing text: $e');
+     } finally {
+       setState(() {
+         _isProcessing = false;
+       });
+     }
+   }
+
   void _listen() async {
     if (!_isListening) {
       if (_speechEnabled) {
         setState(() => _isListening = true);
         _speech.listen(
-          onResult: (result) {
+          onResult: (result) async {
              setState(() {
                _text = result.recognizedWords;
              });
+             if (result.finalResult) {
+               // Process text when speech is final
+               _processText(_text);
+             }
            },
            onDevice: true,
            listenFor: Duration(seconds: 30),
@@ -105,9 +138,23 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              _text,
-              style: TextStyle(fontSize: 24.0),
+              'Original: $_text',
+              style: TextStyle(fontSize: 18.0),
             ),
+            SizedBox(height: 20),
+            if (_isProcessing)
+              CircularProgressIndicator()
+            else ...[
+              Text(
+                'Processed: $_processedText',
+                style: TextStyle(fontSize: 18.0, color: Colors.blue),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Similarity Score: ${(_similarityScore * 100).toStringAsFixed(1)}%',
+                style: TextStyle(fontSize: 16.0, color: Colors.green),
+              ),
+            ],
           ],
         ),
       ),
