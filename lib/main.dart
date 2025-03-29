@@ -89,11 +89,20 @@ class _MyHomePageState extends State<MyHomePage> {
       final result = await _textService.processText(text);
       
       setState(() {
-        _processedText = result['translated_text'];
-        _similarityScore = result['similarity_score'];
+        if (result['status'] == 'success') {
+          _processedText = result['translated_text'] ?? 'Translation failed';
+          _similarityScore = result['similarity_score'] ?? 0.0;
+        } else {
+          _processedText = 'Error: ${result['error'] ?? 'Unknown error'}';
+          _similarityScore = 0.0;
+        }
       });
     } catch (e) {
       print('Error processing text: $e');
+      setState(() {
+        _processedText = 'Error processing text';
+        _similarityScore = 0.0;
+      });
     } finally {
       setState(() {
         _isProcessing = false;
