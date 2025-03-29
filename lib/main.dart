@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'services/text_processing_service.dart';
+import 'components/minimalist_nav.dart';
+import 'components/hero_widget.dart';
+import 'components/translation_cards.dart';
+import 'components/about_section.dart';
+import 'components/motivation_section.dart';
+import 'components/figures_section.dart';
+import 'components/page_transition.dart';
+import 'utils/styles.dart';
+import 'layout/root_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,30 +18,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'MediSpeak',
+      theme: getAppTheme(),
+      home: const MyHomePage(title: 'MediSpeak'),
     );
   }
 }
@@ -136,43 +127,62 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SelectableText(
-              'Original: $_text',
-              style: TextStyle(fontSize: 18.0),
-            ),
-            SizedBox(height: 20),
-            if (_isProcessing)
-              CircularProgressIndicator()
-            else ...[
-              SelectableText(
-                'Processed: $_processedText',
-                style: TextStyle(fontSize: 18.0, color: Colors.blue),
+    return RootLayout(
+      child: Scaffold(
+        appBar: const MinimalistNav(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const HeroWidget(),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SelectableText(
+                      'Original: $_text',
+                      style: const TextStyle(fontSize: 18.0),
+                    ),
+                    const SizedBox(height: 20),
+                    if (_isProcessing)
+                      const CircularProgressIndicator()
+                    else ...[
+                      SelectableText(
+                        'Processed: $_processedText',
+                        style: const TextStyle(fontSize: 18.0, color: Colors.blue),
+                      ),
+                      const SizedBox(height: 10),
+                      SelectableText(
+                        'Similarity Score: ${(_similarityScore * 100).toStringAsFixed(1)}%',
+                        style: const TextStyle(fontSize: 16.0, color: Colors.green),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-              SizedBox(height: 10),
-              SelectableText(
-                'Similarity Score: ${(_similarityScore * 100).toStringAsFixed(1)}%',
-                style: TextStyle(fontSize: 16.0, color: Colors.green),
-              ),
+              const TranslationCards(),
+              const AboutSection(),
+              const MotivationSection(),
+              // const FiguresSection(),
+              PageTransition(child: Container()),
             ],
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _listen,
-        tooltip: 'Listen',
-        backgroundColor: _isListening ? Colors.red : Colors.blue,
-        child: Icon(
-          _isListening ? Icons.mic : Icons.mic_none,
-          color: Colors.white,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: FloatingActionButton(
+            onPressed: _listen,
+            tooltip: 'Listen',
+            backgroundColor: _isListening ? Colors.red : Colors.blue,
+            elevation: 8.0,
+            child: Icon(
+              _isListening ? Icons.mic : Icons.mic_none,
+              color: Colors.white,
+              size: 32.0,
+            ),
+          ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
