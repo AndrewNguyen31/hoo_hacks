@@ -3,8 +3,7 @@ from sentence_transformers import SentenceTransformer
 
 class TextSimilarity:
     def __init__(self):
-        self.model = SentenceTransformer('all-mpnet-base-v2') 
-
+        self.model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
     
     def calculate_similarity(self, text1: str, text2: str) -> float:
         """
