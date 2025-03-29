@@ -1,5 +1,4 @@
 from google.cloud import translate_v2 as translate
-import os
 
 class TranslateMessage:
     def translate_text(self, text, target_language='en'):
@@ -12,6 +11,3 @@ class TranslateMessage:
             return result['translatedText']
         except Exception as e:
             return f"Translation error: {str(e)}"
-        
-        
-
