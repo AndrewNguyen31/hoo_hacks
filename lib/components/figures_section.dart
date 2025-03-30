@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 
 class FiguresSection extends StatefulWidget {
   final bool hasTranslation;
+  final bool isProcessing;
   
   const FiguresSection({
     super.key,
     this.hasTranslation = false,
+    this.isProcessing = false,
   });
 
   @override
@@ -103,81 +105,92 @@ class _FiguresSectionState extends State<FiguresSection> {
           const SelectableText(
             'Figures & Illustrations',
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontSize: 40,
+              fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 20),
-          if (figures.isNotEmpty) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: () => _scroll('left'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    foregroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: () => _scroll('right'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    foregroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+          if (widget.isProcessing)
+            const Center(
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text('Processing text...'),
+                ],
+              ),
+            )
+          else if (figures.isNotEmpty) ...[
             SizedBox(
               height: 400,
-              child: ListView.builder(
-                controller: _scrollController,
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                itemCount: figures.length,
-                itemBuilder: (context, index) {
-                  final figure = figures[index];
-                  return Container(
-                    width: 350,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        figure['src'],
-                        height: 380,
+                controller: _scrollController,
+                physics: const PageScrollPhysics(),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: figures.map((figure) {
+                      return Container(
                         width: 350,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          // Remove this figure if image fails to load
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            setState(() {
-                              figures.remove(figure);
-                            });
-                          });
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ),
-                  );
-                },
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.asset(
+                            figure['src'],
+                            height: 380,
+                            width: 350,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                setState(() {
+                                  figures.remove(figure);
+                                });
+                              });
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
             ),
-          ],
+          ] else
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: const Card(
+                  elevation: 4,
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
+                        'No figures yet. Try speaking or typing something!',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

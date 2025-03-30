@@ -206,6 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
               FiguresSection(
                 key: _figuresKey,
                 hasTranslation: _translations.isNotEmpty,
+                isProcessing: _isProcessing,
               ),
               AboutSection(
                 key: _aboutKey,
