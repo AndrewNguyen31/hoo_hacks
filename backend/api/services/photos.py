@@ -75,7 +75,7 @@ class PhotoExtractor:
     # Main function to scrape Google Images
     async def scrape_google_images(self, search_query="Doctor", timeout_duration=10):
         """
-        Scrape exactly 7 images from Google Images for a given search query.
+        Scrape exactly 4 images from Google Images for a given search query.
         Runs in headless mode without showing browser window.
 
         Args:
@@ -136,10 +136,10 @@ class PhotoExtractor:
                 images_downloaded = 0
                 image_data_list = []
 
-                # Iterate through the first 7 image elements
+                # Iterate through the first 4 image elements
                 for idx, image_element in enumerate(image_elements):
-                    if images_downloaded >= 7:  # Hard limit of 5 images
-                        print("Reached 7 images. Stopping download.")
+                    if images_downloaded >= 4:  # Hard limit of 4 images
+                        print("Reached 4 images. Stopping download.")
                         break
                     try:
                         print(f"Processing image {idx + 1}...")
