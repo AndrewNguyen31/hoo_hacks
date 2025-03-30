@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as math;
+import '../models/language.dart';
+import '../services/language_service.dart';
 
 class AnimatedCircle extends StatefulWidget {
   final double radius;
@@ -138,8 +140,7 @@ class _FloatingSphereState extends State<FloatingSphere> with SingleTickerProvid
     );
   }
 }
-import '../models/language.dart';
-import '../services/language_service.dart';
+
 
 class HeroWidget extends StatefulWidget {
   final Function(String)? onTextSubmit;
@@ -402,45 +403,45 @@ class _HeroWidgetState extends State<HeroWidget> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    popupMenuTheme: PopupMenuThemeData(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
-                  child: DropdownButton<Language>(
-                    value: _selectedLanguage,
-                    isExpanded: true,
-                    icon: const Icon(Icons.language),
-                    menuMaxHeight: 250,
-                    dropdownColor: Colors.white,
-                    underline: Container(),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                    ),
-                    items: _languages.map((Language language) {
-                      return DropdownMenuItem<Language>(
-                        value: language,
-                        child: Text(
-                          language.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(30),
+                    onTap: () {
+                      showSearch(
+                        context: context,
+                        delegate: _LanguageSearchDelegate(
+                          languages: _languages,
+                          onSelected: (Language? newValue) {
+                            setState(() {
+                              _selectedLanguage = newValue;
+                            });
+                            if (newValue != null && widget.onLanguageChanged != null) {
+                              widget.onLanguageChanged!(newValue);
+                            }
+                          },
+                          selectedLanguage: _selectedLanguage,
                         ),
                       );
-                    }).toList(),
-                    onChanged: (Language? newValue) {
-                      setState(() {
-                        _selectedLanguage = newValue;
-                      });
-                      if (newValue != null && widget.onLanguageChanged != null) {
-                        widget.onLanguageChanged!(newValue);
-                      }
                     },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _selectedLanguage?.name ?? 'Select Language',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const Icon(Icons.language, color: Colors.black87),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -559,6 +560,82 @@ class _TypewriterTextState extends State<TypewriterText> {
         letterSpacing: 0.5,
         height: 1.2,
       ),
+    );
+  }
+}
+
+class _LanguageSearchDelegate extends SearchDelegate<Language?> {
+  final List<Language> languages;
+  final Function(Language?) onSelected;
+  final Language? selectedLanguage;
+
+  _LanguageSearchDelegate({
+    required this.languages,
+    required this.onSelected,
+    this.selectedLanguage,
+  });
+
+  @override
+  String get searchFieldLabel => 'Search Language';
+
+  @override
+  TextStyle get searchFieldStyle => const TextStyle(
+    fontSize: 16,
+    color: Colors.black87,
+  );
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      if (query.isNotEmpty)
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () => query = '',
+        ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return buildSuggestions(context);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestions = query.isEmpty
+        ? languages
+        : languages.where((lang) =>
+            lang.name.toLowerCase().contains(query.toLowerCase())).toList();
+
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final language = suggestions[index];
+        final isSelected = language == selectedLanguage;
+        
+        return ListTile(
+          title: Text(
+            language.name,
+            style: TextStyle(
+              color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          leading: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+          onTap: () {
+            onSelected(language);
+            close(context, language);
+          },
+        );
+      },
     );
   }
 }
