@@ -8,15 +8,15 @@ class MotivationSection extends StatelessWidget {
     final features = [
       {
         'title': 'Translation',
-        'description': 'Leverage medical glossary to make translation more robust, sensitive, and efficient',
+        'description': 'MediSpeak breaks down language barriers with real-time translation, ensuring clear communication between patients and healthcare providers. It fosters understanding and trust in medical settings, regardless of the language spoken.',
       },
       {
         'title': 'Plain-Language\nSimplification',
-        'description': 'Automatic rephrasing of complex medical jargon into easy-to-understand explanations',
+        'description': 'Medical jargon can be overwhelming, but MediSpeak simplifies complex terms into easy-to-understand language. Patients gain clarity about their health, while doctors save time rephrasing explanations.',
       },
       {
-        'title': 'Confidence Score',
-        'description': 'Implement confidence score to see if the MVP model works well',
+        'title': 'Improved Efficiency and Costs',
+        'description': 'MediSpeak reduces reliance on costly interpreters and streamlines communication workflows for hospitals. Doctors save energy and time, improving efficiency while enhancing patient care quality.',
       },
     ];
 
@@ -55,7 +55,7 @@ class MotivationSection extends StatelessWidget {
                 children: features.map((feature) {
                   return Container(
                     width: 380,
-                    height: 250,
+                    height: 350,
                     padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
                       color: Colors.white,

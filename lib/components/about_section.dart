@@ -30,7 +30,7 @@ class AboutSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        'MediSpeak is an innovative healthcare application designed to bridge language barriers and enhance patient understanding in medical settings.',
+                        'MediSpeak is an innovative healthcare application designed to break down language barriers and help patients better understand their health.',
                         style: TextStyle(
                           fontSize: 20,
                           height: 1.5,
@@ -39,7 +39,7 @@ class AboutSection extends StatelessWidget {
                       ),
                       SizedBox(height: 40),
                       Text(
-                        'By leveraging advanced AI-powered natural language processing (NLP) and culturally adaptive content, MediSpeak sets itself apart as a comprehensive communication tool for healthcare providers and patients.',
+                        'By combining real-time translation with easy-to-follow visual aids, MediSpeak empowers patients to make informed decisions about their care. Whether it\'s simplifying complex medical terms or tailoring explanations to cultural needs, MediSpeak ensures every patient feels heard, respected, and confident in their healthcare journey.',
                         style: TextStyle(
                           fontSize: 20,
                           height: 1.5,
