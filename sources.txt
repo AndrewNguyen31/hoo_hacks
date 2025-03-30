@@ -1,0 +1,9 @@
+APIs:
+https://aistudio.google.com/welcome?gclsrc=aw.ds&gad_source=1&gbraid=0AAAAACn9t64Fy1-unj9Z8IJ-VKNq1Tsd9&gclid=Cj0KCQjwtJ6_BhDWARIsAGanmKdLGgs2GejdC_WyOCb8qXDqqqlSgvWoL2Nu5Yqs0oUGjMzG2tgQ9moaArpeEALw_wcB
+- Used for message simplification
+https://cloud.google.com/translate?hl=en
+- Used for translation
+
+Other:
+https://scrapingant.com/blog/how-to-scrape-google-images
+- Scrapes images from Google Images
