@@ -133,7 +133,7 @@ class _FiguresSectionState extends State<FiguresSection> {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              height: 600,
+              height: 400,
               child: ListView.builder(
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
@@ -141,8 +141,8 @@ class _FiguresSectionState extends State<FiguresSection> {
                 itemBuilder: (context, index) {
                   final figure = figures[index];
                   return Container(
-                    width: 500,
-                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    width: 350,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
@@ -159,8 +159,8 @@ class _FiguresSectionState extends State<FiguresSection> {
                       borderRadius: BorderRadius.circular(15),
                       child: Image.asset(
                         figure['src'],
-                        height: 550, // Increased height since we removed the caption area
-                        width: 500,
+                        height: 380,
+                        width: 350,
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           // Remove this figure if image fails to load
