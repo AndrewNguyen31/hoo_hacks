@@ -18,6 +18,7 @@ hoo-hacks.json
 # Image and data files
 assets/images/image_*
 assets/metadata/google_images_data.json
+../../../assets/metadata/google_images_data.json
 
 # IntelliJ related
 *.iml

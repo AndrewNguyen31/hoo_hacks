@@ -18,6 +18,8 @@ class TranslationCards extends StatefulWidget {
 
 class _TranslationCardsState extends State<TranslationCards> {
   List<Map<String, dynamic>> translationHistory = [];
+  int? hoveredCardIndex;
+  int? expandedCardIndex;
 
   String getLevelTitle(String level) {
     switch (level) {
@@ -150,53 +152,96 @@ class _TranslationCardsState extends State<TranslationCards> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: widget.translations.map((translation) => Container(
-                            width: cardWidth.clamp(300.0, 400.0), // Min 300, max 400
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Card(
-                              elevation: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      getLevelTitle(translation['level']),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                          children: widget.translations.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final translation = entry.value;
+                            
+                            return MouseRegion(
+                              onEnter: (_) => setState(() => hoveredCardIndex = index),
+                              onExit: (_) => setState(() => hoveredCardIndex = null),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    expandedCardIndex = expandedCardIndex == index ? null : index;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeInOut,
+                                  width: expandedCardIndex == index 
+                                      ? (cardWidth.clamp(300.0, 400.0) * 1.15) 
+                                      : cardWidth.clamp(300.0, 400.0),
+                                  // Enhanced transform for both hover and expanded states
+                                  transform: expandedCardIndex == index 
+                                      ? (Matrix4.identity()
+                                        ..translate(0.0, -10.0, 0.0)
+                                        ..scale(1.05))
+                                      : hoveredCardIndex == index
+                                        ? (Matrix4.identity()
+                                          ..translate(0.0, -5.0, 0.0))
+                                        : Matrix4.identity(),
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Card(
+                                    elevation: expandedCardIndex == index 
+                                        ? 12 
+                                        : hoveredCardIndex == index 
+                                            ? 8 
+                                            : 4,
+                                    shadowColor: (expandedCardIndex == index || hoveredCardIndex == index)
+                                        ? const Color(0xFFFF006E).withOpacity(0.5) 
+                                        : Colors.black.withOpacity(0.3),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                        color: hoveredCardIndex == index ? const Color(0xFFFF006E) : Colors.transparent,
+                                        width: 2,
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        child: SelectableText(
-                                          translation['translated_text'],
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            getLevelTitle(translation['level']),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: SelectableText(
+                                                translation['translated_text'],
+                                                style: const TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                            decoration: BoxDecoration(
+                                              color: getScoreColor(translation['similarity_score']).withOpacity(0.1),
+                                              borderRadius: BorderRadius.circular(20),
+                                            ),
+                                            child: Text(
+                                              'Similarity: ${(translation['similarity_score'] * 100).toStringAsFixed(1)}%',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                color: getScoreColor(translation['similarity_score']),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                      decoration: BoxDecoration(
-                                        color: getScoreColor(translation['similarity_score']).withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        'Similarity: ${(translation['similarity_score'] * 100).toStringAsFixed(1)}%',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: getScoreColor(translation['similarity_score']),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          )).toList(),
+                            );
+                          }).toList(),
                         ),
                       ),
                     );
