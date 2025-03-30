@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'services/text_processing_service.dart';
+import 'components/minimalist_nav.dart';
+import 'components/hero_widget.dart';
+import 'components/translation_cards.dart';
+import 'components/about_section.dart';
+import 'components/motivation_section.dart';
+import 'components/figures_section.dart';
+import 'components/page_transition.dart';
+import 'utils/styles.dart';
+import 'layout/root_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,30 +18,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'MediSpeak',
+      theme: getAppTheme(),
+      home: const MyHomePage(title: 'MediSpeak'),
     );
   }
 }
@@ -60,10 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextProcessingService _textService = TextProcessingService();
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
-  String _processedText = '';
-  double _similarityScore = 0.0;
+  List<Map<String, dynamic>> _translations = [];
   bool _speechEnabled = false;
   bool _isProcessing = false;
+  String _selectedLanguageCode = 'en';
+  final ScrollController _scrollController = ScrollController();
+  final _heroKey = GlobalKey();
+  final _translationsKey = GlobalKey();
+  final _figuresKey = GlobalKey();
+  final _aboutKey = GlobalKey();
+  final _motivationKey = GlobalKey();
 
   @override
   void initState() {
@@ -82,30 +79,28 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _processText(String text) async {
     setState(() {
       _isProcessing = true;
+      _text = text;
     });
 
     try {
-      // Process through single API call
-      final result = await _textService.processText(text);
+      final result = await _textService.processText(
+        text,
+        languageCode: _selectedLanguageCode,
+      );
       
       setState(() {
+        _isProcessing = false;
         if (result['status'] == 'success') {
-          _processedText = result['translated_text'] ?? 'Translation failed';
-          _similarityScore = result['similarity_score'] ?? 0.0;
+          _translations = List<Map<String, dynamic>>.from(result['translations']);
         } else {
-          _processedText = 'Error: ${result['error'] ?? 'Unknown error'}';
-          _similarityScore = 0.0;
+          _translations = [];
         }
       });
     } catch (e) {
       print('Error processing text: $e');
       setState(() {
-        _processedText = 'Error processing text';
-        _similarityScore = 0.0;
-      });
-    } finally {
-      setState(() {
         _isProcessing = false;
+        _translations = [];
       });
     }
   }
@@ -120,10 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
                _text = result.recognizedWords;
              });
              if (result.finalResult) {
-               // Process text when speech is final
                _processText(_text);
              }
            },
+           localeId: _selectedLanguageCode,
            onDevice: true,
            listenFor: Duration(seconds: 30),
         );
@@ -134,44 +129,83 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void scrollToSection(String id) {
+    final keys = {
+      'home': _heroKey,
+      'translations': _translationsKey,
+      'figures': _figuresKey,
+      'about': _aboutKey,
+      'motivation': _motivationKey,
+    };
+
+    if (keys.containsKey(id)) {
+      final context = keys[id]!.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SelectableText(
-              'Original: $_text',
-              style: TextStyle(fontSize: 18.0),
-            ),
-            SizedBox(height: 20),
-            if (_isProcessing)
-              CircularProgressIndicator()
-            else ...[
-              SelectableText(
-                'Processed: $_processedText',
-                style: TextStyle(fontSize: 18.0, color: Colors.blue),
-              ),
-              SizedBox(height: 10),
-              SelectableText(
-                'Similarity Score: ${(_similarityScore * 100).toStringAsFixed(1)}%',
-                style: TextStyle(fontSize: 16.0, color: Colors.green),
-              ),
-            ],
-          ],
+    return RootLayout(
+      child: Scaffold(
+        appBar: MinimalistNav(
+          onSectionClick: scrollToSection,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _listen,
-        tooltip: 'Listen',
-        backgroundColor: _isListening ? Colors.red : Colors.blue,
-        child: Icon(
-          _isListening ? Icons.mic : Icons.mic_none,
-          color: Colors.white,
+        body: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              HeroWidget(
+                key: _heroKey,
+                onTextSubmit: (text) {
+                  setState(() {
+                    _text = text;
+                  });
+                  _processText(text);
+                },
+                onMicPressed: _listen,
+                isListening: _isListening,
+                onLanguageChanged: (language) {
+                  setState(() {
+                    _selectedLanguageCode = language.code;
+                  });
+                  if (_text.isNotEmpty && _text != 'Press the button and start speaking') {
+                    _processText(_text);
+                  }
+                },
+              ),
+              TranslationCards(
+                key: _translationsKey,
+                originalText: _text,
+                translations: _translations,
+                isProcessing: _isProcessing,
+              ),
+              FiguresSection(
+                key: _figuresKey,
+                hasTranslation: _translations.isNotEmpty,
+                isProcessing: _isProcessing,
+              ),
+              AboutSection(
+                key: _aboutKey,
+              ),
+              MotivationSection(
+                key: _motivationKey,
+              ),
+              PageTransition(child: Container()),
+            ],
+          ),
         ),
       ),
     );

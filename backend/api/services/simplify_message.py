@@ -47,15 +47,62 @@ class SimplifyMessage:
         # Create model instances
         self.gemini_model = generativeai.GenerativeModel('gemini-2.0-flash')
 
-    def simplify_message(self, message) -> str:
-        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Remember, you are only simplifying the message. Do not include thought process or rationale. Just return a simplified version of the input message and remember to be sensitive to the patients feelings when writing the simplified message.  Here is the medical text: " + message
+    def simplify_message_easy(self, message) -> str:
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that is very easy for patients to understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Remember, you are only simplifying the message. Do not include thought process or rationale. Just return a simplified version of the input message and remember to be sensitive to the patients feelings when writing the simplified message.  Here is the medical text: " + message
 
         few_shot_examples = "Here are some examples of how you should simplify medical messages: The imaging shows a localized malignant neoplasm in the left lung lobe, requiring biopsy for confirmation. --- SIMPLIFIED:The scan found a small area of cancer in your left lung. We need to do a test called a biopsy to be sure."
 
         final_prompt = instruction + "\n\n" + few_shot_examples
 
         try:
-            response = self.gemini_model.generate_content(instruction)
+            response = self.gemini_model.generate_content(final_prompt)
             return response.text
         except Exception as e:
             return f"An error occurred: {str(e)}"
+
+    def simplify_message_intermediate(self, message) -> str:
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content in a way that patients with moderate amounts of domain knowledge can understand. Use plain language while preserving the meaning. Focus on: Removing medical jargon. Explaining terms in patient-friendly language. Using a calm and reassuring tone. Adapting to cultural sensitivity when necessary. Remember, you are only simplifying the message. Do not include thought process or rationale. Just return a simplified version of the input message and remember to be sensitive to the patients feelings when writing the simplified message.  Here is the medical text: " + message
+
+        few_shot_examples = "Here are some examples of how you should simplify medical messages: The imaging shows a localized malignant neoplasm in the left lung lobe, requiring biopsy for confirmation. --- SIMPLIFIED: You have a mild case of pneumonia, which is an infection in your lungs. We're treating it with antibiotics to help you get better."
+
+        final_prompt = instruction + "\n\n" + few_shot_examples
+
+        try:
+            response = self.gemini_model.generate_content(final_prompt)
+            return response.text
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+        
+    def simplify_message_advanced(self, message) -> str:
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare provider, your task is to rewrite the content for recipients with advanced medical knowledge and expertise. Use appropriate technical language while preserving clinical accuracy. Focus on: Maintaining precise medical terminology, Providing sufficient technical detail, Using a professional and scientifically rigorous tone, Being culturally sensitive and appropriate. Remember, you are only simplifying the message for an advanced audience. Do not include thought process or rationale. Just return a technically accurate version of the input message that would be appropriate for someone with strong medical domain knowledge. Here is the medical text: " + message
+
+        few_shot_examples = "Here are some examples of how you should simplify medical messages: The imaging shows a localized malignant neoplasm in the left lung lobe, requiring biopsy for confirmation. --- SIMPLIFIED: Patient presents with mild bacterial pneumonia characterized by lower respiratory tract infection. Treatment protocol initiated with broad-spectrum antibiotic therapy to target the causative pathogen."
+
+        final_prompt = instruction + "\n\n" + few_shot_examples
+
+        try:
+            response = self.gemini_model.generate_content(final_prompt)
+            return response.text
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+
+        
+    def extract_idea(self, message) -> str:
+        instruction = "Task Background: You are a medical language simplifier. Given complex medical sentences from a healthcare professional, you task is to extract the illness or condition that the patient has. I want you to return the illness or condition only, nothing else Here is the medical text: " + message
+
+        few_shot_examples = "Here are some examples of how you should extract the main idea of a medical sentence: The patient has a mild case of pneumonia and is being treated with antibiotics. --- MAIN IDEA: pneumonia"
+
+        final_prompt = instruction + "\n\n" + few_shot_examples
+
+        try:
+            response = self.gemini_model.generate_content(final_prompt)
+            return response.text
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+
+if __name__ == "__main__":
+    simplify_message = SimplifyMessage()
+    simplify_message.load_env()
+    print(simplify_message.simplify_message_intermediate("The patient has a mild case of pneumonia and is being treated with antibiotics."))
+    print(simplify_message.simplify_message_advanced("The patient has a mild case of pneumonia and is being treated with antibiotics."))
+        
