@@ -10,14 +10,15 @@ enum TranslationLevel {
 class TextProcessingService {
   final String baseUrl = 'http://localhost:8000';
 
-  Future<Map<String, dynamic>> processText(String text) async {
+  Future<Map<String, dynamic>> processText(String text, {String languageCode = 'en'}) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/api/process/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'text': text,
-          'process_all_levels': true
+          'process_all_levels': true,
+          'language': languageCode,
         }),
       );
       

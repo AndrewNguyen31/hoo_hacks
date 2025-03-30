@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Map<String, dynamic>> _translations = [];
   bool _speechEnabled = false;
   bool _isProcessing = false;
+  String _selectedLanguageCode = 'en';
 
   @override
   void initState() {
@@ -76,7 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     try {
-      final result = await _textService.processText(text);
+      final result = await _textService.processText(
+        text,
+        languageCode: _selectedLanguageCode,
+      );
       
       setState(() {
         _isProcessing = false;
@@ -105,10 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
                _text = result.recognizedWords;
              });
              if (result.finalResult) {
-               // Process text when speech is final
                _processText(_text);
              }
            },
+           localeId: _selectedLanguageCode,
            onDevice: true,
            listenFor: Duration(seconds: 30),
         );
@@ -136,6 +140,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 onMicPressed: _listen,
                 isListening: _isListening,
+                onLanguageChanged: (language) {
+                  setState(() {
+                    _selectedLanguageCode = language.code;
+                  });
+                  // Reprocess text with new language if there's existing text
+                  if (_text.isNotEmpty && _text != 'Press the button and start speaking') {
+                    _processText(_text);
+                  }
+                },
               ),
               TranslationCards(
                 originalText: _text,

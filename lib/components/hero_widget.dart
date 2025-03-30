@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import '../models/language.dart';
+import '../services/language_service.dart';
 
 class HeroWidget extends StatefulWidget {
   final Function(String)? onTextSubmit;
   final VoidCallback? onMicPressed;
   final bool isListening;
+  final Function(Language)? onLanguageChanged;
   
   const HeroWidget({
     super.key, 
     this.onTextSubmit,
     this.onMicPressed,
     this.isListening = false,
+    this.onLanguageChanged,
   });
 
   @override
@@ -18,6 +22,31 @@ class HeroWidget extends StatefulWidget {
 
 class _HeroWidgetState extends State<HeroWidget> {
   final TextEditingController _textController = TextEditingController();
+  List<Language> _languages = [];
+  Language? _selectedLanguage;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguages();
+  }
+
+  Future<void> _loadLanguages() async {
+    try {
+      final languages = await LanguageService.loadLanguages();
+      setState(() {
+        _languages = languages;
+        _selectedLanguage = LanguageService.getDefaultLanguage(languages);
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading languages: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -76,7 +105,7 @@ class _HeroWidgetState extends State<HeroWidget> {
                   ),
                 ),
                 SizedBox(
-                  height: 52, // Match the height of the text field
+                  height: 52,
                   child: ElevatedButton(
                     onPressed: () {
                       if (_textController.text.isNotEmpty && widget.onTextSubmit != null) {
@@ -94,15 +123,15 @@ class _HeroWidgetState extends State<HeroWidget> {
                         ),
                       ),
                       padding: const EdgeInsets.all(0),
-                      minimumSize: const Size(52, 52), // Square button
+                      minimumSize: const Size(52, 52),
                       elevation: 0,
                     ),
                     child: const Icon(Icons.arrow_forward, size: 24),
                   ),
                 ),
-                const SizedBox(width: 16), // Reduced spacing between buttons
+                const SizedBox(width: 16),
                 SizedBox(
-                  height: 52, // Match the height
+                  height: 52,
                   child: ElevatedButton(
                     onPressed: widget.onMicPressed,
                     style: ElevatedButton.styleFrom(
@@ -127,7 +156,7 @@ class _HeroWidgetState extends State<HeroWidget> {
                           'Start Speaking',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w500, // Slightly reduced weight
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -137,6 +166,65 @@ class _HeroWidgetState extends State<HeroWidget> {
               ],
             ),
             const SizedBox(height: 20),
+            if (_isLoading)
+              const SizedBox(
+                height: 52,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            else
+              Container(
+                height: 52,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    popupMenuTheme: PopupMenuThemeData(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                  child: DropdownButton<Language>(
+                    value: _selectedLanguage,
+                    isExpanded: true,
+                    icon: const Icon(Icons.language),
+                    menuMaxHeight: 250,
+                    dropdownColor: Colors.white,
+                    underline: Container(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black87,
+                    ),
+                    items: _languages.map((Language language) {
+                      return DropdownMenuItem<Language>(
+                        value: language,
+                        child: Text(
+                          language.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (Language? newValue) {
+                      setState(() {
+                        _selectedLanguage = newValue;
+                      });
+                      if (newValue != null && widget.onLanguageChanged != null) {
+                        widget.onLanguageChanged!(newValue);
+                      }
+                    },
+                  ),
+                ),
+              ),
           ],
         ),
       ),

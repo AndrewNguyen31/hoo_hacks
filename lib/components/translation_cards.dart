@@ -118,7 +118,7 @@ class _TranslationCardsState extends State<TranslationCards> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Text(
+                        SelectableText(
                           widget.originalText ?? '',
                           style: const TextStyle(fontSize: 16),
                         ),
@@ -165,7 +165,7 @@ class _TranslationCardsState extends State<TranslationCards> {
                                     const SizedBox(height: 10),
                                     Expanded(
                                       child: SingleChildScrollView(
-                                        child: Text(
+                                        child: SelectableText(
                                           translation['translated_text'],
                                           style: const TextStyle(fontSize: 16),
                                         ),
