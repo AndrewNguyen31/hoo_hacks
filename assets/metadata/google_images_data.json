@@ -1,42 +1,42 @@
 [
     {
-        "image_description": "Ventricular septal defect (VSD) -hole in the heart diagnosed by an echo",
-        "source_url": "https://www.mychildheartdoctor.com/ventricular-septal-defect/",
-        "source_name": "mychildheartdoctor.com",
-        "image_file": "../assets/images/image_5.jpg",
-        "ai_description": "This is an anatomical illustration of the heart demonstrating a ventricular septal defect (VSD), a congenital condition characterized by an abnormal opening in the septum separating the ventricles.\n",
-        "similarity_score": 0.7963122725486755
-    },
-    {
         "image_description": "Ventricular septal defect (VSD) - Symptoms & causes - Mayo Clinic",
         "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
         "source_name": "mayoclinic.org",
         "image_file": "../assets/images/image_2.jpg",
-        "ai_description": "This is a schematic illustration of the heart depicting a normal anatomy on one side and the presence of a ventricular septal defect on the other.\n",
-        "similarity_score": 0.7438066005706787
+        "ai_description": "This diagrammatic image illustrates a transverse section of the heart, demonstrating a ventricular septal defect (VSD).\n",
+        "similarity_score": 0.799812912940979
     },
     {
-        "image_description": "Ventricular Septal Defect (VSD): Types & Causes",
-        "source_url": "https://my.clevelandclinic.org/health/diseases/17615-ventricular-septal-defects-vsd",
-        "source_name": "my.clevelandclinic.org",
-        "image_file": "../assets/images/image_3.jpg",
-        "ai_description": "This is an anatomical illustration of the heart, demonstrating a ventricular septal defect (VSD) with abnormal blood flow between the right and left ventricles.\n",
-        "similarity_score": 0.7411996126174927
+        "image_description": "Ventricular septal defect (VSD) -hole in the heart diagnosed by an echo",
+        "source_url": "https://www.mychildheartdoctor.com/ventricular-septal-defect/",
+        "source_name": "mychildheartdoctor.com",
+        "image_file": "../assets/images/image_5.jpg",
+        "ai_description": "The image illustrates a schematic representation of the heart showing a ventricular septal defect (VSD) in the interventricular septum.\n",
+        "similarity_score": 0.7920383214950562
     },
     {
-        "image_description": "Ventricular Septal Defect (VSD) - Children's Hospital of Orange County",
-        "source_url": "https://choc.org/heart/congenital-heart-defects/ventricular-septal-defect-vsd/",
-        "source_name": "choc.org",
-        "image_file": "../assets/images/image_6.jpg",
-        "ai_description": "This is a schematic illustration of the heart, demonstrating a normal anatomical structure versus a heart with a ventricular septal defect (VSD).\n",
-        "similarity_score": 0.7230063080787659
+        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
+        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
+        "source_name": "mayoclinic.org",
+        "image_file": "../assets/images/image_1.jpg",
+        "ai_description": "This is a schematic image of the heart demonstrating a ventricular septal defect (VSD), with abnormal blood flow between the ventricles.\n",
+        "similarity_score": 0.7661848664283752
+    },
+    {
+        "image_description": "Ventricular Septal Defect (VSD) (for Parents) | Nemours KidsHealth",
+        "source_url": "https://kidshealth.org/en/parents/vsd.html",
+        "source_name": "kidshealth.org",
+        "image_file": "../assets/images/image_7.jpg",
+        "ai_description": "This is a diagram of the heart, showing a ventricular septal defect (VSD) where there is a hole between the right and left ventricles.\n",
+        "similarity_score": 0.7509254813194275
     },
     {
         "image_description": "Ventricular septal defect - Wikipedia",
         "source_url": "https://en.wikipedia.org/wiki/Ventricular_septal_defect",
         "source_name": "en.wikipedia.org",
         "image_file": "../assets/images/image_4.jpg",
-        "ai_description": "This is a schematic illustration of the heart, showing a ventricular septal defect (VSD) with blood flow from the left ventricle to the right ventricle through various types of septal openings.\n",
-        "similarity_score": 0.7207150459289551
+        "ai_description": "This is a medical illustration of the heart showing a ventricular septal defect (VSD).\n",
+        "similarity_score": 0.7469196319580078
     }
 ]
