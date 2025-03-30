@@ -1,26 +1,42 @@
 [
     {
         "image_description": "Broken collarbone - Symptoms and causes - Mayo Clinic",
-        "source_url": "https://www.topdoctors.co.uk/medical-dictionary/broken-collarbone",
-        "source_name": "topdoctors.co.uk",
+        "source_url": "https://my.clevelandclinic.org/health/diseases/16874-broken-collarbone-clavicle-fracture",
+        "source_name": "my.clevelandclinic.org",
         "image_file": "../../../assets/images/image_1.jpg",
-        "ai_description": "The illustration of the right shoulder region demonstrates a mid-clavicular fracture.",
-        "similarity_score": 0.6115334033966064
+        "ai_description": "Illustration of the right upper torso demonstrates a clavicle fracture.",
+        "similarity_score": 0.6236104965209961
     },
     {
         "image_description": "Broken Collarbones | Why Clavicle Fractures are now repaired",
         "source_url": "https://www.stoneclinic.com/blog/Broken-Collarbones",
         "source_name": "stoneclinic.com",
         "image_file": "../../../assets/images/image_5.jpg",
-        "ai_description": "AP radiograph of the right shoulder demonstrates a mid-shaft clavicle fracture.\n",
-        "similarity_score": 0.5931046009063721
+        "ai_description": "AP radiograph of the shoulder and upper thorax reveals a displaced fracture of the midshaft clavicle.\n",
+        "similarity_score": 0.570954442024231
+    },
+    {
+        "image_description": "Broken Collarbone In Children: Causes, Symptoms & Treatment",
+        "source_url": "https://www.momjunction.com/articles/broken-collarbone-kids-treatment-causes-symptoms_00815815/",
+        "source_name": "momjunction.com",
+        "image_file": "../../../assets/images/image_6.jpg",
+        "ai_description": "This is a schematic illustration of the right shoulder girdle demonstrating a mid-clavicular fracture.\n",
+        "similarity_score": 0.5541020631790161
     },
     {
         "image_description": "Broken Collarbone (Clavicle Fracture): Treatment & Recovery",
         "source_url": "https://my.clevelandclinic.org/health/diseases/16874-broken-collarbone-clavicle-fracture",
         "source_name": "my.clevelandclinic.org",
-        "image_file": "../../../assets/images/image_3.png",
-        "ai_description": "The illustration depicts a clavicle fracture in the shoulder region, showing the bone discontinuity.\n",
-        "similarity_score": 0.5891258120536804
+        "image_file": "../../../assets/images/image_2.jpg",
+        "ai_description": "This is a medical illustration depicting a transverse fracture of the mid-shaft of the clavicle in the upper pectoral region.",
+        "similarity_score": 0.5529372692108154
+    },
+    {
+        "image_description": "Broken collarbone: what is it, symptoms and treatment | Top Doctors",
+        "source_url": "https://www.topdoctors.co.uk/medical-dictionary/broken-collarbone",
+        "source_name": "topdoctors.co.uk",
+        "image_file": "../../../assets/images/image_3.jpg",
+        "ai_description": "Anteroposterior radiograph of the right shoulder demonstrates a displaced fracture of the midshaft clavicle.",
+        "similarity_score": 0.5440041422843933
     }
 ]

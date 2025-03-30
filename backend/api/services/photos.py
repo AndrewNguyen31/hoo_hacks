@@ -5,6 +5,7 @@ import shutil
 from aiohttp import ClientSession, ClientTimeout
 from urllib.parse import urlparse, urlencode
 from playwright.async_api import async_playwright
+from PIL import Image as PILImage
 
 class PhotoExtractor:
     # Function to extract the domain from a URL
@@ -27,39 +28,42 @@ class PhotoExtractor:
     # Function to download an image with retry logic
     async def download_image(self, session, img_url, file_path, retries=3):
         """
-        Download an image from the given URL and save it to the specified file path.
-        If the download fails, it retries the specified number of times.
-
-        Args:
-            session (ClientSession): The aiohttp session to use for downloading.
-            img_url (str): The URL of the image to download.
-            file_path (str): The path to save the downloaded image.
-            retries (int, optional): The number of retries for downloading. Defaults to 3.
-
-        Returns:
-            None
+        Download an image and convert it to JPG if necessary
         """
         attempt = 0
         while attempt < retries:
             try:
-                # Attempt to download the image
                 async with session.get(img_url) as response:
                     if response.status == 200:
-                        # Write the image content to the file
-                        with open(file_path, "wb") as f:
+                        # Write the original image first
+                        temp_path = file_path + ".temp"
+                        with open(temp_path, "wb") as f:
                             f.write(await response.read())
-                        print(f"Downloaded image to: {file_path}")
-                        return
+                        
+                        # Convert to JPG if needed
+                        with PILImage.open(temp_path) as img:
+                            # Convert to RGB mode (removes alpha channel if present)
+                            if img.mode in ('RGBA', 'P'):
+                                img = img.convert('RGB')
+                            
+                            # Always save as JPG
+                            jpg_path = os.path.splitext(file_path)[0] + '.jpg'
+                            img.save(jpg_path, 'JPEG', quality=95)
+                            
+                        # Remove temporary file
+                        os.remove(temp_path)
+                        print(f"Downloaded and converted image to: {jpg_path}")
+                        return jpg_path
                     else:
                         print(f"Failed to download image from {img_url}. Status: {response.status}")
             except Exception as e:
-                print(f"Error downloading image from {img_url}: {e}")
+                print(f"Error downloading/converting image from {img_url}: {e}")
             attempt += 1
-            # Retry if the maximum number of attempts has not been reached
             if attempt < retries:
                 print(f"Retrying download for {img_url} (attempt {attempt + 1}/{retries})")
-                await asyncio.sleep(2**attempt)  # Exponential backoff for retries
+                await asyncio.sleep(2**attempt)
         print(f"Failed to download image from {img_url} after {retries} attempts.")
+        return None
 
     # Function to scroll to the bottom of the page
     async def scroll_to_bottom(self, page):
@@ -87,7 +91,7 @@ class PhotoExtractor:
     # Main function to scrape Google Images
     async def scrape_google_images(self, search_query="Doctor", timeout_duration=10):
         """
-        Scrape exactly 5 images from Google Images for a given search query.
+        Scrape exactly 7 images from Google Images for a given search query.
         Runs in headless mode without showing browser window.
 
         Args:
@@ -117,14 +121,20 @@ class PhotoExtractor:
 
             # Clean out existing directories
             if os.path.exists(download_folder):
-                print(f"Cleaning images directory: {download_folder}")
-                shutil.rmtree(download_folder)
-            os.makedirs(download_folder)
+                print(f"Cleaning previous image_ files from directory: {download_folder}")
+                # Only remove files that start with 'image_'
+                for file in os.listdir(download_folder):
+                    if file.startswith('image_'):
+                        file_path = os.path.join(download_folder, file)
+                        os.remove(file_path)
+                        print(f"Removed: {file}")
+            else:
+                os.makedirs(download_folder)
 
             if os.path.exists(metadata_folder):
                 print(f"Cleaning metadata directory: {metadata_folder}")
-                shutil.rmtree(metadata_folder)
-            os.makedirs(metadata_folder)
+                if not os.path.exists(metadata_folder):
+                    os.makedirs(metadata_folder)
 
             # Initialize empty JSON file
             with open(json_file_path, "w") as json_file:
@@ -138,10 +148,10 @@ class PhotoExtractor:
                 images_downloaded = 0
                 image_data_list = []
 
-                # Iterate through the first 5 image elements
+                # Iterate through the first 7 image elements
                 for idx, image_element in enumerate(image_elements):
-                    if images_downloaded >= 5:  # Hard limit of 5 images
-                        print("Reached 5 images. Stopping download.")
+                    if images_downloaded >= 7:  # Hard limit of 5 images
+                        print("Reached 7 images. Stopping download.")
                         break
                     try:
                         print(f"Processing image {idx + 1}...")
@@ -154,10 +164,14 @@ class PhotoExtractor:
                             continue
 
                         img_url = await img_tag.get_attribute("src")
-                        file_extension = os.path.splitext(urlparse(img_url).path)[1] or ".png"
-                        file_path = os.path.join(download_folder, f"image_{idx + 1}{file_extension}")
-
-                        await self.download_image(session, img_url, file_path)
+                        # Always use .jpg extension now
+                        file_path = os.path.join(download_folder, f"image_{idx + 1}")
+                        
+                        # download_image now returns the actual path used
+                        actual_file_path = await self.download_image(session, img_url, file_path)
+                        
+                        if not actual_file_path:
+                            continue
 
                         source_url = await page.query_selector('(//div[@jsname="figiqf"]/a[@class="YsLeY"])[2]')
                         source_url = await source_url.get_attribute("href") if source_url else "N/A"
@@ -168,7 +182,7 @@ class PhotoExtractor:
                             "image_description": image_description,
                             "source_url": source_url,
                             "source_name": source_name,
-                            "image_file": file_path,
+                            "image_file": actual_file_path,
                         }
 
                         image_data_list.append(image_data)
