@@ -1,34 +1,34 @@
 [
     {
-        "image_description": "Meirl : r/meirl",
-        "source_url": "https://www.disabilitysecrets.com/resources/preparing-social-security-disability-mental-exam.htm",
-        "source_name": "disabilitysecrets.com",
+        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
+        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
+        "source_name": "mayoclinic.org",
         "image_file": "../assets/images/image_1.jpg",
-        "ai_description": "This is a screenshot of a social media post expressing the challenges of living with a chronic illness.\n",
-        "similarity_score": 0.4682919979095459
+        "ai_description": "This is an illustrative diagram of the heart demonstrating a ventricular septal defect (VSD), where there is an abnormal opening between the left and right ventricles.\n",
+        "similarity_score": 0.7570308446884155
     },
     {
-        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
+        "image_description": "Ventricular septal defect (VSD) - Symptoms & causes - Mayo Clinic",
         "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
         "source_name": "mayoclinic.org",
-        "image_file": "../assets/images/image_1.jpg"
-    },
-    {
-        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
-        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
-        "source_name": "mayoclinic.org",
-        "image_file": "../assets/images/image_2.jpg"
-    },
-    {
-        "image_description": "Ventricular Septal Defect (VSD): Types & Causes",
-        "source_url": "https://my.clevelandclinic.org/health/diseases/17615-ventricular-septal-defects-vsd",
-        "source_name": "my.clevelandclinic.org",
-        "image_file": "../assets/images/image_3.jpg"
+        "image_file": "../assets/images/image_2.jpg",
+        "ai_description": "This is a schematic illustration of the heart, demonstrating a ventricular septal defect in one image compared to a normal heart in the other.\n",
+        "similarity_score": 0.7413516640663147
     },
     {
         "image_description": "Ventricular septal defect - Wikipedia",
         "source_url": "https://en.wikipedia.org/wiki/Ventricular_septal_defect",
         "source_name": "en.wikipedia.org",
-        "image_file": "../assets/images/image_4.jpg"
+        "image_file": "../assets/images/image_4.jpg",
+        "ai_description": "This is an anatomical illustration of the heart depicting a ventricular septal defect (VSD), showing abnormal blood flow between the right and left ventricles through various types of defects.\n",
+        "similarity_score": 0.7291775345802307
+    },
+    {
+        "image_description": "Ventricular Septal Defect (VSD): Types & Causes",
+        "source_url": "https://my.clevelandclinic.org/health/diseases/17615-ventricular-septal-defects-vsd",
+        "source_name": "my.clevelandclinic.org",
+        "image_file": "../assets/images/image_3.jpg",
+        "ai_description": "This is an anatomical illustration of the heart demonstrating a ventricular septal defect, which allows for mixing of oxygen-rich and oxygen-poor blood between the left and right ventricles.\n",
+        "similarity_score": 0.7196097373962402
     }
 ]

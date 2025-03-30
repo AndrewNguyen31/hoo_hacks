@@ -277,168 +277,278 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'MediSpeak',
-                  style: TextStyle(
-                    fontSize: 64,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black26,
-                        blurRadius: 15,
-                        offset: Offset(3, 3),
-                      ),
-                      Shadow(
-                        color: Colors.black12,
-                        blurRadius: 20,
-                        offset: Offset(5, 5),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Where we ',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w900,
-                        color: Colors.yellow,
-                        letterSpacing: 0.5,
-                        height: 1.2,
-                      ),
-                    ),
-                    TypewriterText(
-                      phrases: const [
-                        'break the language barrier',
-                        'bring clarity in care',
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final titleSize = constraints.maxWidth < 600 ? 40.0 : 64.0;
+                    final subtitleSize = constraints.maxWidth < 600 ? 18.0 : 24.0;
+                    
+                    return Column(
+                      children: [
+                        Text(
+                          'MediSpeak',
+                          style: TextStyle(
+                            fontSize: titleSize,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: 1.2,
+                            shadows: const [
+                              Shadow(
+                                color: Colors.black26,
+                                blurRadius: 15,
+                                offset: Offset(3, 3),
+                              ),
+                              Shadow(
+                                color: Colors.black12,
+                                blurRadius: 20,
+                                offset: Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Where we ',
+                              style: TextStyle(
+                                fontSize: subtitleSize,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w900,
+                                color: Colors.yellow,
+                                letterSpacing: 0.5,
+                                height: 1.2,
+                              ),
+                            ),
+                            TypewriterText(
+                              phrases: const [
+                                'break the language barrier',
+                                'bring clarity in care',
+                              ],
+                              style: TextStyle(
+                                fontSize: subtitleSize,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                        controller: _textController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type your text here...',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                          isDense: true,
-                        ),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_textController.text.isNotEmpty && widget.onTextSubmit != null) {
-                            widget.onTextSubmit!(_textController.text);
-                            _textController.clear();
-                          }
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                            if (states.contains(WidgetState.hovered)) {
-                              return const Color(0xFFFF006E);
-                            }
-                            return const Color(0xFF007FFF);
-                          }),
-                          foregroundColor: WidgetStateProperty.all(Colors.white),
-                          shape: WidgetStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30),
-                                bottomRight: Radius.circular(30),
-                              ),
-                            ),
-                          ),
-                          padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
-                          minimumSize: WidgetStateProperty.all(const Size(52, 52)),
-                          elevation: WidgetStateProperty.all(0),
-                        ),
-                        child: const Icon(Icons.arrow_forward, size: 24),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    SizedBox(
-                      height: 52,
-                      child: AnimatedBuilder(
-                        animation: _pulseController,
-                        builder: (context, child) {
-                          final scale = widget.isListening 
-                              ? 1.0 + (math.sin(_pulseController.value * 2 * math.pi) * 0.05)
-                              : 1.0;
-                          
-                          return Transform.scale(
-                            scale: scale,
-                            child: ElevatedButton(
-                              onPressed: widget.onMicPressed,
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                                  if (states.contains(WidgetState.hovered)) {
-                                    return const Color(0xFFFF006E);
-                                  }
-                                  if (widget.isListening) {
-                                    return const Color(0xFFFF006E);
-                                  }
-                                  return const Color(0xFF007FFF);
-                                }),
-                                foregroundColor: WidgetStateProperty.all(Colors.white),
-                                shape: WidgetStateProperty.all(
-                                  const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                                  ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxWidth < 600) {
+                      // Vertical layout for narrow screens
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: TextField(
+                              controller: _textController,
+                              decoration: const InputDecoration(
+                                hintText: 'Type your text here...',
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                  borderSide: BorderSide.none,
                                 ),
-                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24)),
-                                minimumSize: WidgetStateProperty.all(const Size(200, 52)),
-                                elevation: WidgetStateProperty.all(0),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                                isDense: true,
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(right: 8),
+                                  child: Icon(Icons.arrow_forward, color: Colors.black54),
+                                ),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    widget.isListening ? Icons.mic_off : Icons.mic_none,
-                                    size: 24,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    widget.isListening ? 'Stop Listening' : 'Start Speaking',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
+                              style: const TextStyle(fontSize: 16),
+                              onSubmitted: (text) {
+                                if (text.isNotEmpty && widget.onTextSubmit != null) {
+                                  widget.onTextSubmit!(text);
+                                  _textController.clear();
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            height: 52,
+                            child: AnimatedBuilder(
+                              animation: _pulseController,
+                              builder: (context, child) {
+                                final scale = widget.isListening 
+                                    ? 1.0 + (math.sin(_pulseController.value * 2 * math.pi) * 0.05)
+                                    : 1.0;
+                                
+                                return Transform.scale(
+                                  scale: scale,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: ElevatedButton(
+                                      onPressed: widget.onMicPressed,
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                                          if (states.contains(WidgetState.hovered)) {
+                                            return const Color(0xFFFF006E);
+                                          }
+                                          if (widget.isListening) {
+                                            return const Color(0xFFFF006E);
+                                          }
+                                          return const Color(0xFF4A7DFF);
+                                        }),
+                                        foregroundColor: WidgetStateProperty.all(Colors.white),
+                                        shape: WidgetStateProperty.all(
+                                          const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                                          ),
+                                        ),
+                                        minimumSize: WidgetStateProperty.all(const Size.fromHeight(52)),
+                                        elevation: WidgetStateProperty.all(0),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            widget.isListening ? Icons.mic_off : Icons.mic_none,
+                                            size: 24,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Text(
+                                            widget.isListening ? 'Stop Listening' : 'Start Speaking',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                          ),
+                        ],
+                      );
+                    }
+                    
+                    // Horizontal layout for wider screens
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 300,
+                          child: TextField(
+                            controller: _textController,
+                            decoration: const InputDecoration(
+                              hintText: 'Type your text here...',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  bottomLeft: Radius.circular(30),
+                                ),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                              isDense: true,
+                            ),
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_textController.text.isNotEmpty && widget.onTextSubmit != null) {
+                                widget.onTextSubmit!(_textController.text);
+                                _textController.clear();
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                                if (states.contains(WidgetState.hovered)) {
+                                  return const Color(0xFFFF006E);
+                                }
+                                return const Color(0xFF4A7DFF);
+                              }),
+                              foregroundColor: WidgetStateProperty.all(Colors.white),
+                              shape: WidgetStateProperty.all(
+                                const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(30),
+                                    bottomRight: Radius.circular(30),
+                                  ),
+                                ),
+                              ),
+                              padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
+                              minimumSize: WidgetStateProperty.all(const Size(52, 52)),
+                              elevation: WidgetStateProperty.all(0),
+                            ),
+                            child: const Icon(Icons.arrow_forward, size: 24),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        SizedBox(
+                          height: 52,
+                          child: AnimatedBuilder(
+                            animation: _pulseController,
+                            builder: (context, child) {
+                              final scale = widget.isListening 
+                                  ? 1.0 + (math.sin(_pulseController.value * 2 * math.pi) * 0.05)
+                                  : 1.0;
+                              
+                              return Transform.scale(
+                                scale: scale,
+                                child: ElevatedButton(
+                                  onPressed: widget.onMicPressed,
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                                      if (states.contains(WidgetState.hovered)) {
+                                        return const Color(0xFFFF006E);
+                                      }
+                                      if (widget.isListening) {
+                                        return const Color(0xFFFF006E);
+                                      }
+                                      return const Color(0xFF4A7DFF);
+                                    }),
+                                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                                    shape: WidgetStateProperty.all(
+                                      const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                                      ),
+                                    ),
+                                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24)),
+                                    minimumSize: WidgetStateProperty.all(const Size(200, 52)),
+                                    elevation: WidgetStateProperty.all(0),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        widget.isListening ? Icons.mic_off : Icons.mic_none,
+                                        size: 24,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        widget.isListening ? 'Stop Listening' : 'Start Speaking',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 if (_isLoading)

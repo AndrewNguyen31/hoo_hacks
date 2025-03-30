@@ -46,35 +46,73 @@ class _MinimalistNavState extends State<MinimalistNav> {
       elevation: 4,
       leadingWidth: 0,
       automaticallyImplyLeading: false,
-      title: Container(
-        padding: const EdgeInsets.only(left: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: navItems.map((item) => 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: TextButton(
-                style: ButtonStyle(
-                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0)),
-                  minimumSize: WidgetStateProperty.all(Size.zero),
-                  backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                  overlayColor: WidgetStateProperty.all(Colors.transparent),
-                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                    if (states.contains(WidgetState.hovered)) {
-                      return const Color(0xFFFF006E);
-                    }
-                    return Colors.black87;
-                  }),
+      title: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 600) { // Switch to hamburger menu on small screens
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.black87),
+                  onPressed: () {
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(0, kToolbarHeight, 0, 0),
+                      items: navItems.map((item) => 
+                        PopupMenuItem<String>(
+                          value: item['id'],
+                          child: Text(
+                            item['name']!,
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ).toList(),
+                    ).then((value) {
+                      if (value != null) {
+                        widget.onSectionClick(value);
+                      }
+                    });
+                  },
                 ),
-                onPressed: () => widget.onSectionClick(item['id']!),
-                child: Text(
-                  item['name']!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
-          ).toList(),
-        ),
+              ],
+            );
+          }
+          
+          // Original horizontal nav for larger screens
+          return Container(
+            padding: const EdgeInsets.only(left: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: navItems.map((item) => 
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: TextButton(
+                    style: ButtonStyle(
+                      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0)),
+                      minimumSize: WidgetStateProperty.all(Size.zero),
+                      backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                        if (states.contains(WidgetState.hovered)) {
+                          return const Color(0xFFFF006E);
+                        }
+                        return Colors.black87;
+                      }),
+                    ),
+                    onPressed: () => widget.onSectionClick(item['id']!),
+                    child: Text(
+                      item['name']!,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              ).toList(),
+            ),
+          );
+        },
       ),
       centerTitle: false,
     );
