@@ -146,6 +146,7 @@ class HeroWidget extends StatefulWidget {
   final VoidCallback? onMicPressed;
   final bool isListening;
   final Function(Language)? onLanguageChanged;
+  final bool isClientMode;
   
   const HeroWidget({
     super.key, 
@@ -153,6 +154,7 @@ class HeroWidget extends StatefulWidget {
     this.onMicPressed,
     this.isListening = false,
     this.onLanguageChanged,
+    this.isClientMode = false,
   });
 
   @override
@@ -504,7 +506,33 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                         ),
                       ),
                     ),
-                ],
+                    const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: widget.isClientMode 
+                    ? const Color(0xFFE3F2FD) // Light blue background for Client
+                    : const Color(0xFFE8F5E9), // Light green background for Doctor
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: widget.isClientMode
+                      ? const Color(0xFF2196F3) // Blue border for Client
+                      : const Color(0xFF4CAF50), // Green border for Doctor
+                    width: 1.5,
+                  ),
+                ),
+                child: Text(
+                  widget.isClientMode ? 'Client Mode' : 'Doctor Mode',
+                  style: TextStyle(
+                    color: widget.isClientMode
+                      ? const Color(0xFF1565C0) // Dark blue text for Client
+                      : const Color(0xFF2E7D32), // Dark green text for Doctor
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+          ],
               ),
             ),
           ),

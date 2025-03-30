@@ -27,6 +27,8 @@ class _TranslationCardsState extends State<TranslationCards> {
         return 'Moderate Detail';
       case 'advanced':
         return 'Technical Detail';
+      case 'client':
+        return 'Your Message Translated';
       default:
         return 'Translation';
     }

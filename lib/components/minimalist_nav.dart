@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class MinimalistNav extends StatefulWidget implements PreferredSizeWidget {
   final Function(String) onSectionClick;
+  final bool isClientPage;
   
   const MinimalistNav({
     super.key,
     required this.onSectionClick,
+    this.isClientPage = false,
   });
   
   @override
@@ -17,17 +19,13 @@ class MinimalistNav extends StatefulWidget implements PreferredSizeWidget {
 
 class _MinimalistNavState extends State<MinimalistNav> {
   bool scrolled = false;
-  final List<Map<String, String>> navItems = [
-    {'name': 'Home', 'id': 'home'},
-    {'name': 'Translations', 'id': 'translations'},
-    {'name': 'Figures', 'id': 'figures'},
-    {'name': 'About', 'id': 'about'},
-    {'name': 'Motivation', 'id': 'motivation'},
-  ];
+  late List<Map<String, String>> navItems;
 
   @override
   void initState() {
     super.initState();
+    _setupNavItems();
+    
     // Add scroll listener to handle navbar color change
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final scrollController = PrimaryScrollController.of(context);
@@ -37,6 +35,27 @@ class _MinimalistNavState extends State<MinimalistNav> {
         });
       });
     });
+  }
+
+  void _setupNavItems() {
+    if (widget.isClientPage) {
+      navItems = [
+        {'name': 'Home', 'id': 'home'},
+        {'name': 'Translations', 'id': 'translations'},
+        {'name': 'About', 'id': 'about'},
+        {'name': 'Motivation', 'id': 'motivation'},
+        {'name': 'Doctor', 'id': 'doctor'}, // This will take us back to the doctor view
+      ];
+    } else {
+      navItems = [
+        {'name': 'Home', 'id': 'home'},
+        {'name': 'Translations', 'id': 'translations'},
+        {'name': 'Figures', 'id': 'figures'},
+        {'name': 'About', 'id': 'about'},
+        {'name': 'Motivation', 'id': 'motivation'},
+        {'name': 'Client', 'id': 'client'}, // This will take us to the client view
+      ];
+    }
   }
 
   @override
