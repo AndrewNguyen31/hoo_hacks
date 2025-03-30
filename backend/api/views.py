@@ -34,9 +34,38 @@ def process_text(request):
         data = json.loads(request.body)
         original_text = data.get('text', '')
         process_all_levels = data.get('process_all_levels', False)
-        target_language = data.get('language', 'en')  # Get target language from request
+        target_language = data.get('language', 'en')
+        is_client_mode = data.get('is_client_mode', False)  # Get client mode flag
         simplify_message.load_env()
         
+        # If client mode is enabled, use client_to_doctor transformation instead
+        if is_client_mode:
+            # Use client-to-doctor transformation if available
+            client_text = simplify_message.client_to_doctor(original_text)
+            
+            # Translate to target language
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './api/hoo-hacks.json'
+            translated_text = translate_message.translate_text(client_text, target_language)
+            translated_text = html.unescape(translated_text)
+            
+            # Calculate similarity
+            similarity_score = text_similarity.calculate_combined_similarity(original_text, translated_text)
+            
+            # Format for client mode - use the same structure as expected by the app
+            return JsonResponse({
+                'original_text': original_text,
+                'translations': [
+                    {
+                        'level': 'client',
+                        'translated_text': translated_text,
+                        'similarity_score': similarity_score,
+                        'target_language': target_language
+                    }
+                ],
+                'status': 'success'
+            })
+        
+        # For non-client mode, continue with existing code
         # Extract simple idea for image search
         simple_idea = simplify_message.extract_idea(original_text)
         

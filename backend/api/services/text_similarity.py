@@ -3,6 +3,7 @@ from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 import os
 import google.generativeai as generativeai
+import math
 
 class TextSimilarity:
     def __init__(self):
@@ -108,7 +109,10 @@ class TextSimilarity:
         # Give more weight to LLM-based similarity as it's better at understanding semantic meaning
         # Add a small constant to the LLM score to ensure it's not too low (biased result)
         # Embedding score is more discriminative, so we add bias term
-        combined_score = (0.4 * (embedding_score + 0.1)) + (0.6 * (llm_score + 0.2))
+        raw_combined_score = (0.4 * (embedding_score + 0.1)) + (0.6 * (llm_score + 0.2))
+        
+        # Normalize using a sigmoid function to keep it between 0 and 1 with a smooth transition
+        combined_score = 1 / (1 + math.exp(-5 * (raw_combined_score - 0.5)))
         
         return combined_score
     
