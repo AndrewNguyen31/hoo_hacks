@@ -36,41 +36,47 @@ class _MinimalistNavState extends State<MinimalistNav> {
           scrolled = scrollController.offset > 50;
         });
       });
-
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: scrolled ? Colors.white : Colors.transparent,
-      elevation: scrolled ? 4 : 0,
-      title: Text(
-        'MediSpeak',
-        style: TextStyle(
-          color: scrolled ? Colors.black : Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      actions: [
-        Row(
+      backgroundColor: Colors.white,
+      elevation: 4,
+      leadingWidth: 0,
+      automaticallyImplyLeading: false,
+      title: Container(
+        padding: const EdgeInsets.only(left: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: navItems.map((item) => 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: TextButton(
+                style: ButtonStyle(
+                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0)),
+                  minimumSize: WidgetStateProperty.all(Size.zero),
+                  backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.hovered)) {
+                      return const Color(0xFFFF006E);
+                    }
+                    return Colors.black87;
+                  }),
+                ),
                 onPressed: () => widget.onSectionClick(item['id']!),
                 child: Text(
                   item['name']!,
-                  style: TextStyle(
-                    color: scrolled ? Colors.black : Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             )
           ).toList(),
         ),
-      ],
+      ),
+      centerTitle: false,
     );
   }
 }
