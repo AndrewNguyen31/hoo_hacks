@@ -350,30 +350,44 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: TextField(
-                              controller: _textController,
-                              decoration: const InputDecoration(
-                                hintText: 'Type your text here...',
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                                  borderSide: BorderSide.none,
+                            child: Stack(
+                              alignment: Alignment.centerRight,
+                              children: [
+                                TextField(
+                                  controller: _textController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Type your text here...',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                                    isDense: true,
+                                    suffixIcon: SizedBox(width: 48), // Space for the button
+                                  ),
+                                  style: const TextStyle(fontSize: 16),
+                                  onSubmitted: (text) {
+                                    if (text.isNotEmpty && widget.onTextSubmit != null) {
+                                      widget.onTextSubmit!(text);
+                                      _textController.clear();
+                                    }
+                                  },
                                 ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                                isDense: true,
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Icon(Icons.arrow_forward, color: Colors.black54),
+                                Positioned(
+                                  right: 8,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.arrow_forward, color: Colors.black54),
+                                    onPressed: () {
+                                      if (_textController.text.isNotEmpty && widget.onTextSubmit != null) {
+                                        widget.onTextSubmit!(_textController.text);
+                                        _textController.clear();
+                                      }
+                                    },
+                                  ),
                                 ),
-                              ),
-                              style: const TextStyle(fontSize: 16),
-                              onSubmitted: (text) {
-                                if (text.isNotEmpty && widget.onTextSubmit != null) {
-                                  widget.onTextSubmit!(text);
-                                  _textController.clear();
-                                }
-                              },
+                              ],
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -615,10 +629,36 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                   ),
                 ),
               ),
+              const SizedBox(height: 16), // Add space between the buttons
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: widget.isClientMode 
+                    ? const Color(0xFFE3F2FD) // Light blue background for Client
+                    : const Color(0xFFE8F5E9), // Light green background for Doctor
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: widget.isClientMode
+                      ? const Color(0xFF2196F3) // Blue border for Client
+                      : const Color(0xFF4CAF50), // Green border for Doctor
+                    width: 1.5,
+                  ),
+                ),
+                child: Text(
+                  widget.isClientMode ? 'Client Mode' : 'Doctor Mode',
+                  style: TextStyle(
+                    color: widget.isClientMode
+                      ? const Color(0xFF1565C0) // Dark blue text for Client
+                      : const Color(0xFF2E7D32), // Dark green text for Doctor
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
           ],
               ),
             ),
-          ),
+          
         ],
       ),
     );

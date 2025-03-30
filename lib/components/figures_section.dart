@@ -104,6 +104,7 @@ class _FiguresSectionState extends State<FiguresSection> {
         children: [
           const SelectableText(
             'Figures & Illustrations',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.w900,
