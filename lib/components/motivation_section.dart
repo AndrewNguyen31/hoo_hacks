@@ -7,7 +7,7 @@ class MotivationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final features = [
       {
-        'title': 'Translation',
+        'title': 'Translation\n',
         'description': 'MediSpeak breaks down language barriers with real-time translation, ensuring clear communication between patients and healthcare providers. It fosters understanding and trust in medical settings, regardless of the language spoken.',
       },
       {
