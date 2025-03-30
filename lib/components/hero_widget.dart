@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class HeroWidget extends StatefulWidget {
   final Function(String)? onTextSubmit;
@@ -43,11 +44,14 @@ class _HeroWidgetState extends State<HeroWidget> {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Breaking the barrier and bringing clarity in care!',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
+            TypewriterText(
+              phrases: const [
+                'Breaking the barrier',
+                'Bringing clarity in care!',
+              ],
+              style: const TextStyle(
+                fontSize: 24,
+                fontFamily: 'Roboto',
               ),
             ),
             const SizedBox(height: 40),
@@ -139,6 +143,116 @@ class _HeroWidgetState extends State<HeroWidget> {
             const SizedBox(height: 20),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class TypewriterText extends StatefulWidget {
+  final List<String> phrases;
+  final TextStyle style;
+
+  const TypewriterText({
+    super.key,
+    required this.phrases,
+    required this.style,
+  });
+
+  @override
+  State<TypewriterText> createState() => _TypewriterTextState();
+}
+
+class _TypewriterTextState extends State<TypewriterText> {
+  String _displayText = '';
+  int _currentIndex = 0;
+  int _currentPhraseIndex = 0;
+  bool _showCursor = true;
+  bool _isTyping = true;
+  Timer? _timer;
+  Timer? _cursorTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAnimation();
+    _startCursorBlink();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _cursorTimer?.cancel();
+    super.dispose();
+  }
+
+  void _resetAndSwitchPhrase() {
+    setState(() {
+      _displayText = '';
+      _currentIndex = 0;
+      _isTyping = true;
+      _currentPhraseIndex = (_currentPhraseIndex + 1) % widget.phrases.length;
+    });
+  }
+
+  void _startAnimation() {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (!mounted) return;
+
+      String currentPhrase = widget.phrases[_currentPhraseIndex];
+      
+      setState(() {
+        if (_isTyping) {
+          if (_currentIndex < currentPhrase.length) {
+            _displayText = currentPhrase.substring(0, _currentIndex + 1);
+            _currentIndex++;
+          } else {
+            // Pause at the end of typing
+            timer.cancel();
+            Future.delayed(const Duration(milliseconds: 2000), () {
+              if (mounted) {
+                setState(() => _isTyping = false);
+                _startAnimation();
+              }
+            });
+          }
+        } else {
+          if (_currentIndex > 0) {
+            _displayText = currentPhrase.substring(0, _currentIndex - 1);
+            _currentIndex--;
+          } else {
+            // Switch to next phrase
+            timer.cancel();
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              if (mounted) {
+                _resetAndSwitchPhrase();
+                _startAnimation();
+              }
+            });
+          }
+        }
+      });
+    });
+  }
+
+  void _startCursorBlink() {
+    _cursorTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      if (mounted) {
+        setState(() {
+          _showCursor = !_showCursor;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '$_displayText${_showCursor ? "|" : ""}',
+      style: widget.style.copyWith(
+        fontWeight: FontWeight.w900,
+        color: Colors.yellow,
+        letterSpacing: 0.5,
+        height: 1.2,
       ),
     );
   }
