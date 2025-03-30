@@ -159,8 +159,9 @@ class HeroWidget extends StatefulWidget {
   State<HeroWidget> createState() => _HeroWidgetState();
 }
 
-class _HeroWidgetState extends State<HeroWidget> {
+class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
+  late AnimationController _pulseController;
   
   List<Widget> _createSpheres() {
     final spheres = <Widget>[];
@@ -195,6 +196,16 @@ class _HeroWidgetState extends State<HeroWidget> {
   void initState() {
     super.initState();
     _loadLanguages();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadLanguages() async {
@@ -248,7 +259,7 @@ class _HeroWidgetState extends State<HeroWidget> {
                 center: const Alignment(0.2, -0.2),
                 radius: 1.2,
                 colors: [
-                  Colors.white.withOpacity(0.1),
+                  Colors.white.withValues(alpha: 0.1),
                   Colors.transparent,
                 ],
                 stops: const [0.0, 0.7],
@@ -332,18 +343,25 @@ class _HeroWidgetState extends State<HeroWidget> {
                             _textController.clear();
                           }
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4A7DFF),
-                          foregroundColor: Colors.white,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                            if (states.contains(WidgetState.hovered)) {
+                              return const Color(0xFFFF006E);
+                            }
+                            return const Color(0xFF4A7DFF);
+                          }),
+                          foregroundColor: WidgetStateProperty.all(Colors.white),
+                          shape: WidgetStateProperty.all(
+                            const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                bottomRight: Radius.circular(30),
+                              ),
                             ),
                           ),
-                          padding: const EdgeInsets.all(0),
-                          minimumSize: const Size(52, 52),
-                          elevation: 0,
+                          padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
+                          minimumSize: WidgetStateProperty.all(const Size(52, 52)),
+                          elevation: WidgetStateProperty.all(0),
                         ),
                         child: const Icon(Icons.arrow_forward, size: 24),
                       ),
@@ -351,35 +369,57 @@ class _HeroWidgetState extends State<HeroWidget> {
                     const SizedBox(width: 16),
                     SizedBox(
                       height: 52,
-                      child: ElevatedButton(
-                        onPressed: widget.onMicPressed,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4A7DFF),
-                          foregroundColor: Colors.white,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          minimumSize: const Size(200, 52),
-                          elevation: 0,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              widget.isListening ? Icons.mic : Icons.mic_none,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 12),
-                            const Text(
-                              'Start Speaking',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                      child: AnimatedBuilder(
+                        animation: _pulseController,
+                        builder: (context, child) {
+                          final scale = widget.isListening 
+                              ? 1.0 + (math.sin(_pulseController.value * 2 * math.pi) * 0.05)
+                              : 1.0;
+                          
+                          return Transform.scale(
+                            scale: scale,
+                            child: ElevatedButton(
+                              onPressed: widget.onMicPressed,
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                                  if (states.contains(WidgetState.hovered)) {
+                                    return const Color(0xFFFF006E);
+                                  }
+                                  if (widget.isListening) {
+                                    return const Color(0xFFFF006E);
+                                  }
+                                  return const Color(0xFF4A7DFF);
+                                }),
+                                foregroundColor: WidgetStateProperty.all(Colors.white),
+                                shape: WidgetStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                                  ),
+                                ),
+                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24)),
+                                minimumSize: WidgetStateProperty.all(const Size(200, 52)),
+                                elevation: WidgetStateProperty.all(0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    widget.isListening ? Icons.mic_off : Icons.mic_none,
+                                    size: 24,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    widget.isListening ? 'Stop Listening' : 'Start Speaking',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
                     ),
                   ],
