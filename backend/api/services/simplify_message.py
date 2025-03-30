@@ -85,6 +85,19 @@ class SimplifyMessage:
             return response.text
         except Exception as e:
             return f"An error occurred: {str(e)}"
+        
+    def client_to_doctor(self, message) -> str:
+        instruction = "Task Background: You are a communication assistant helping patients clearly express their symptoms and concerns to healthcare providers. Given a patient's description, your task is to help articulate their thoughts more clearly while keeping their original words and meaning. Focus on: Organizing their thoughts in a clear structure, Maintaining their own descriptions and terminology, Ensuring all their concerns are expressed clearly, Preserving the timeline of their symptoms. Do not translate terms into medical language or ask for additional information. Also, do not provide any rationale or thought process - simply help structure and clarify their existing message. Here is the patient's description: " + message
+
+        few_shot_examples = "Here are some examples of how you should assist in articulation of client messages: I have a headache and a cough. I have been coughing for 3 days and the headache started yesterday.. --- TRANSFORMED INTO: I'm experiencing a headache and a cough. The cough started three days ago. The headache began yesterday."
+
+        final_prompt = instruction + "\n\n" + few_shot_examples
+
+        try:
+            response = self.gemini_model.generate_content(final_prompt)
+            return response.text
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
 
         
     def extract_idea(self, message) -> str:
@@ -99,10 +112,3 @@ class SimplifyMessage:
             return response.text
         except Exception as e:
             return f"An error occurred: {str(e)}"
-
-if __name__ == "__main__":
-    simplify_message = SimplifyMessage()
-    simplify_message.load_env()
-    print(simplify_message.simplify_message_intermediate("The patient has a mild case of pneumonia and is being treated with antibiotics."))
-    print(simplify_message.simplify_message_advanced("The patient has a mild case of pneumonia and is being treated with antibiotics."))
-        

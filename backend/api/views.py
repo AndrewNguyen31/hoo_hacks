@@ -63,7 +63,7 @@ def process_text(request):
                 translated_text = html.unescape(translated_text)
                 
                 # Step 3: Calculate similarity
-                similarity_score = text_similarity.calculate_similarity(original_text, translated_text)
+                similarity_score = text_similarity.calculate_combined_similarity(original_text, translated_text)
                 
                 translations.append({
                     'level': level,
@@ -95,7 +95,7 @@ def process_text(request):
             translated_text = html.unescape(translated_text)
             
             # Step 3: Calculate similarity
-            similarity_score = text_similarity.calculate_similarity(original_text, translated_text)
+            similarity_score = text_similarity.calculate_combined_similarity(original_text, translated_text)
             
             return JsonResponse({
                 'original_text': original_text,
