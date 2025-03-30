@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 
 class FiguresSection extends StatefulWidget {
   final bool hasTranslation;
+  final bool isProcessing;
   
   const FiguresSection({
     super.key,
     this.hasTranslation = false,
+    this.isProcessing = false,
   });
 
   @override
@@ -108,7 +110,17 @@ class _FiguresSectionState extends State<FiguresSection> {
             ),
           ),
           const SizedBox(height: 20),
-          if (figures.isNotEmpty) ...[
+          if (widget.isProcessing)
+            const Center(
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text('Processing text...'),
+                ],
+              ),
+            )
+          else if (figures.isNotEmpty) ...[
             SizedBox(
               height: 400,
               child: SingleChildScrollView(
