@@ -8,35 +8,27 @@
         "similarity_score": 0.4682919979095459
     },
     {
-        "image_description": "Tired Sick: Understand & Reverse Chronic Fatigue Syndrome (CFS) & Multiple  Chemical Sensitivity (MCS): Bulletproof Mitochondria, Adrenal Fatigue,  Fibromyalgia, Epstein Barr Virus (EBV) & Lyme Disease (Audible Audio  Edition): Alex ... - Amazon.com",
-        "source_url": "https://www.amazon.com/Tired-Sick-Sensitivity-Mitochondria-Fibromyalgia/dp/B0BL2RRQC3",
-        "source_name": "amazon.com",
-        "image_file": "../assets/images/image_6.jpg",
-        "ai_description": "This is not a medical image, but rather an illustration of a person experiencing symptoms related to conditions such as Chronic Fatigue Syndrome (CFS) and Multiple Chemical Sensitivity (MCS).",
-        "similarity_score": 0.42572325468063354
+        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
+        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
+        "source_name": "mayoclinic.org",
+        "image_file": "../assets/images/image_1.jpg"
     },
     {
-        "image_description": "Global Health Data Methods: Epidemiology. Why, where and how?",
-        "source_url": "https://globalhealthdata.org/epidemiology/",
-        "source_name": "globalhealthdata.org",
-        "image_file": "../assets/images/image_3.jpg",
-        "ai_description": "This is not a medical image; it's a diagram illustrating the cyclical process of public health, showing interconnected steps like describing disease burden, determining causes, testing interventions, synthesizing evidence, and contributing to policy.\n",
-        "similarity_score": 0.40834474563598633
+        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
+        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
+        "source_name": "mayoclinic.org",
+        "image_file": "../assets/images/image_2.jpg"
     },
     {
-        "image_description": "Deciphering clinical abbreviations with privacy protecting ML",
-        "source_url": "https://research.google/blog/deciphering-clinical-abbreviations-with-privacy-protecting-ml/",
-        "source_name": "research.google",
-        "image_file": "../assets/images/image_7.jpg",
-        "ai_description": "This image is a schematic illustrating a \"Web Scale Reverse Substitution\" process, converting medical terms in public web data into abbreviations via a dictionary.\n",
-        "similarity_score": 0.339983731508255
+        "image_description": "Ventricular Septal Defect (VSD): Types & Causes",
+        "source_url": "https://my.clevelandclinic.org/health/diseases/17615-ventricular-septal-defects-vsd",
+        "source_name": "my.clevelandclinic.org",
+        "image_file": "../assets/images/image_3.jpg"
     },
     {
-        "image_description": "How to Pass the Social Security Disability Mental Exam",
-        "source_url": "https://www.disabilitysecrets.com/resources/preparing-social-security-disability-mental-exam.htm",
-        "source_name": "disabilitysecrets.com",
-        "image_file": "../assets/images/image_2.jpg",
-        "ai_description": "This is a graphic image showing tips for a mental health exam, suggesting honesty and focus during the assessment.",
-        "similarity_score": 0.326984167098999
+        "image_description": "Ventricular septal defect - Wikipedia",
+        "source_url": "https://en.wikipedia.org/wiki/Ventricular_septal_defect",
+        "source_name": "en.wikipedia.org",
+        "image_file": "../assets/images/image_4.jpg"
     }
 ]
