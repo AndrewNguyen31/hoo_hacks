@@ -159,6 +159,7 @@ class _TranslationCardsState extends State<TranslationCards> {
                             return MouseRegion(
                               onEnter: (_) => setState(() => hoveredCardIndex = index),
                               onExit: (_) => setState(() => hoveredCardIndex = null),
+                              cursor: SystemMouseCursors.click,
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
