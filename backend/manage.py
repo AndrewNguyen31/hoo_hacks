@@ -4,6 +4,27 @@ import os
 import sys
 
 
+def clear_images():
+    """Clear all images starting with 'image_' from assets/images folder"""
+    images_folder = "../assets/images"
+        
+    try:
+        found = False
+        for filename in os.listdir(images_folder):
+            if filename.startswith('image_'):
+                file_path = os.path.join(images_folder, filename)
+                os.remove(file_path)
+                print(f"Removed: {filename}")
+                found = True
+        
+        if found:
+            print("Successfully cleared all image_ files")
+        else:
+            print("No image_ files found to clear")
+    except Exception as e:
+        print(f"Error clearing images: {e}")
+
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
@@ -15,6 +36,12 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
+    # Clear images if runserver command is used
+    if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
+        print("Running server - cleaning up image files...")
+        clear_images()
+
     execute_from_command_line(sys.argv)
 
 

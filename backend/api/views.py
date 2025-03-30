@@ -19,7 +19,18 @@ photo_ranker = PhotoRanker()
 
 @api_view(['POST'])
 def process_text(request):
+    # Clear all images starting with 'image_' from assets/images folder
     try:
+        images_folder = "../assets/images"  
+        try:
+            for filename in os.listdir(images_folder):
+                if filename.startswith('image_'):
+                    file_path = os.path.join(images_folder, filename)
+                    os.remove(file_path)
+                    print(f"Removed: {filename}")
+        except Exception as e:
+            print(f"Error clearing images: {e}")
+        
         data = json.loads(request.body)
         original_text = data.get('text', '')
         process_all_levels = data.get('process_all_levels', False)
@@ -31,7 +42,6 @@ def process_text(request):
         
         # Start image scraping in the background
         asyncio.run(photo_extractor.scrape_google_images(search_query=simple_idea, timeout_duration=10))
-        asyncio.run(photo_ranker.rank_photos(simple_idea))
         
         translations = []
         

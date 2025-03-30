@@ -1,34 +1,26 @@
 [
     {
-        "image_description": "Ventricular septal defect (VSD) - Symptoms & causes - Mayo Clinic",
-        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
-        "source_name": "mayoclinic.org",
-        "image_file": "../assets/images/image_2.jpg",
-        "ai_description": "This diagrammatic image illustrates a transverse section of the heart, demonstrating a ventricular septal defect (VSD).\n",
-        "similarity_score": 0.799812912940979
-    },
-    {
-        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
-        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
-        "source_name": "mayoclinic.org",
+        "image_description": "Lung Cancer: Types, Stages, Symptoms, Diagnosis & Treatment",
+        "source_url": "https://en.wikipedia.org/wiki/Lung_cancer",
+        "source_name": "en.wikipedia.org",
         "image_file": "../assets/images/image_1.jpg"
     },
     {
-        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
-        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
-        "source_name": "mayoclinic.org",
+        "image_description": "Lung cancer - Wikipedia",
+        "source_url": "https://en.wikipedia.org/wiki/Lung_cancer",
+        "source_name": "en.wikipedia.org",
         "image_file": "../assets/images/image_2.jpg"
     },
     {
-        "image_description": "Ventricular Septal Defect (VSD): Types & Causes",
-        "source_url": "https://my.clevelandclinic.org/health/diseases/17615-ventricular-septal-defects-vsd",
-        "source_name": "my.clevelandclinic.org",
+        "image_description": "Understanding Non-Small Cell Lung Cancer Treatment",
+        "source_url": "https://www.hoacny.com/patient-resources/types-cancer/non-small-cell-lung-cancer",
+        "source_name": "hoacny.com",
         "image_file": "../assets/images/image_3.jpg"
     },
     {
-        "image_description": "Ventricular septal defect - Wikipedia",
-        "source_url": "https://en.wikipedia.org/wiki/Ventricular_septal_defect",
-        "source_name": "en.wikipedia.org",
+        "image_description": "What Is Lung Cancer? | Types of Lung Cancer | American Cancer Society",
+        "source_url": "https://www.cancer.org/cancer/types/lung-cancer/about/what-is.html",
+        "source_name": "cancer.org",
         "image_file": "../assets/images/image_4.jpg"
     }
 ]
