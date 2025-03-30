@@ -20,7 +20,7 @@ class _MinimalistNavState extends State<MinimalistNav> {
   final List<Map<String, String>> navItems = [
     {'name': 'Home', 'id': 'home'},
     {'name': 'Translations', 'id': 'translations'},
-    {'name': 'Figures', 'id': 'figures'},
+    //{'name': 'Figures', 'id': 'figures'},
     {'name': 'About', 'id': 'about'},
     {'name': 'Motivation', 'id': 'motivation'},
   ];

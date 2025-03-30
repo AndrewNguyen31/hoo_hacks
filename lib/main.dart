@@ -6,7 +6,7 @@ import 'components/hero_widget.dart';
 import 'components/translation_cards.dart';
 import 'components/about_section.dart';
 import 'components/motivation_section.dart';
-import 'components/figures_section.dart';
+//import 'components/figures_section.dart';
 import 'components/page_transition.dart';
 import 'utils/styles.dart';
 import 'layout/root_layout.dart';
@@ -133,7 +133,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final keys = {
       'home': _heroKey,
       'translations': _translationsKey,
-      'figures': _figuresKey,
       'about': _aboutKey,
       'motivation': _motivationKey,
     };
@@ -191,10 +190,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 originalText: _text,
                 translations: _translations,
                 isProcessing: _isProcessing,
-              ),
-              FiguresSection(
-                key: _figuresKey,
-                hasTranslation: _translations.isNotEmpty,
               ),
               AboutSection(
                 key: _aboutKey,
