@@ -146,6 +146,7 @@ class HeroWidget extends StatefulWidget {
   final VoidCallback? onMicPressed;
   final bool isListening;
   final Function(Language)? onLanguageChanged;
+  final bool isClientMode;
   
   const HeroWidget({
     super.key, 
@@ -153,6 +154,7 @@ class HeroWidget extends StatefulWidget {
     this.onMicPressed,
     this.isListening = false,
     this.onLanguageChanged,
+    this.isClientMode = false,
   });
 
   @override
@@ -226,8 +228,11 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen height
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     return Container(
-      height: 800,
+      height: screenHeight,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: const Alignment(-1.5, -1.5),
@@ -611,6 +616,7 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                 ),
               ),
           ],
+              ),
             ),
           ),
         ],
