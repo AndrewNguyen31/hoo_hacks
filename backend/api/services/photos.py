@@ -1,8 +1,10 @@
 import asyncio
 import json
 import os
+import certifi
+import ssl
 
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, TCPConnector
 from urllib.parse import urlparse, urlencode
 from playwright.async_api import async_playwright
 from PIL import Image as PILImage
@@ -33,7 +35,12 @@ class PhotoExtractor:
         attempt = 0
         while attempt < retries:
             try:
-                async with session.get(img_url) as response:
+                # Create SSL context that ignores certificate verification
+                ssl_context = ssl.create_default_context()
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+                
+                async with session.get(img_url, ssl=ssl_context) as response:
                     if response.status == 200:
                         # Write the original image first
                         temp_path = file_path + ".temp"
@@ -92,8 +99,8 @@ class PhotoExtractor:
             await page.wait_for_selector('div[data-id="mosaic"]')
 
             # Set up directories for image storage
-            download_folder = "../../../assets/images"
-            metadata_folder = "../../../assets/metadata"
+            download_folder = "../assets/images"
+            metadata_folder = "../assets/metadata"
             json_file_path = os.path.join(metadata_folder, "google_images_data.json")
 
             # Clean out existing directories
@@ -121,7 +128,11 @@ class PhotoExtractor:
             image_elements = await page.query_selector_all('div[data-attrid="images universal"]')
             print(f"Found {len(image_elements)} image elements on the page.")
 
-            async with ClientSession(timeout=ClientTimeout(total=timeout_duration)) as session:
+            ssl_context = ssl.create_default_context(cafile=certifi.where())
+            async with ClientSession(
+                timeout=ClientTimeout(total=timeout_duration),
+                connector=TCPConnector(ssl=ssl_context)
+            ) as session:
                 images_downloaded = 0
                 image_data_list = []
 
@@ -175,7 +186,3 @@ class PhotoExtractor:
 
             print(f"Finished downloading {images_downloaded} images.")
             await browser.close()
-
-# # Create an instance and run
-# extractor = PhotoExtractor()
-# asyncio.run(extractor.scrape_google_images(search_query="Broken Collarbone", timeout_duration=10))

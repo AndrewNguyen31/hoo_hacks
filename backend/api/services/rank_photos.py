@@ -4,7 +4,7 @@ from PIL import Image
 
 from google import genai
 from google.genai import types
-from text_similarity import TextSimilarity
+from .text_similarity import TextSimilarity
 from dotenv import load_dotenv
 
 class PhotoRanker:
@@ -51,8 +51,8 @@ class PhotoRanker:
         Rank downloaded images and update the existing google_images_data.json
         with only the top 5 most relevant images
         """
-        images_folder = "../../../assets/images"
-        metadata_folder = "../../../assets/metadata"
+        images_folder = "../assets/images"
+        metadata_folder = "../assets/metadata"
         json_file_path = os.path.join(metadata_folder, "google_images_data.json")
         ranked_images = []
 
@@ -100,20 +100,3 @@ class PhotoRanker:
             json.dump(top_five_images, f, indent=4)
 
         return top_five_images
-
-# Update the test function
-if __name__ == "__main__":
-    import asyncio
-    
-    async def test_ranking():
-        ranker = PhotoRanker()
-        rankings = await ranker.rank_photos("Broken Collarbone")
-        print("\nTop 5 Images (updated in google_images_data.json):")
-        for rank, image in enumerate(rankings, 1):
-            print(f"\nRank {rank}:")
-            print(f"File: {image['image_file']}")
-            print(f"Original Description: {image['image_description']}")
-            print(f"AI Description: {image['ai_description']}")
-            print(f"Similarity Score: {image['similarity_score']:.4f}")
-
-    asyncio.run(test_ranking())

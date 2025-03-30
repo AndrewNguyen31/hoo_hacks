@@ -24,6 +24,7 @@ def process_text(request):
         original_text = data.get('text', '')
         process_all_levels = data.get('process_all_levels', False)
         target_language = data.get('language', 'en')  # Get target language from request
+        simplify_message.load_env()
         
         # Extract simple idea for image search
         simple_idea = simplify_message.extract_idea(original_text)
@@ -39,7 +40,6 @@ def process_text(request):
             levels = ['easy', 'intermediate', 'advanced']
             for level in levels:
                 # Step 1: Simplify based on level
-                simplify_message.load_env()
                 if level == 'easy':
                     simplified_text = simplify_message.simplify_message_easy(original_text)
                 elif level == 'intermediate':
