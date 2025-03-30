@@ -49,7 +49,7 @@ class PhotoRanker:
     async def rank_photos(self, original_prompt):
         """
         Rank downloaded images and update the existing google_images_data.json
-        with only the top 3 most relevant images
+        with only the top 5 most relevant images
         """
         images_folder = "../../../assets/images"
         metadata_folder = "../../../assets/metadata"
@@ -79,26 +79,27 @@ class PhotoRanker:
                 'similarity_score': similarity_score
             })
 
-        # Sort images by similarity score and get top 3
+        # Sort images by similarity score and get top 5
         ranked_images.sort(key=lambda x: x['similarity_score'], reverse=True)
-        top_three_images = ranked_images[:3]
+        top_five_images = ranked_images[:5]
 
-        # Clean up unused images and update JSON
-        removed_images = ranked_images[3:]
+        # Clean up unused images that start with 'image_'
+        removed_images = ranked_images[5:]
         for image in removed_images:
-            try:
-                # Remove the image file
-                image_path = os.path.join(images_folder, os.path.basename(image['image_file']))
-                os.remove(image_path)
-                print(f"Removed unused image: {image['image_file']}")
-            except Exception as e:
-                print(f"Error removing file {image['image_file']}: {e}")
+            filename = os.path.basename(image['image_file'])
+            if filename.startswith('image_'):
+                try:
+                    image_path = os.path.join(images_folder, filename)
+                    os.remove(image_path)
+                    print(f"Removed unused image: {filename}")
+                except Exception as e:
+                    print(f"Error removing file {filename}: {e}")
 
-        # Update the original JSON file with only top 3
+        # Update the original JSON file with only top 5
         with open(json_file_path, 'w') as f:
-            json.dump(top_three_images, f, indent=4)
+            json.dump(top_five_images, f, indent=4)
 
-        return top_three_images
+        return top_five_images
 
 # Update the test function
 if __name__ == "__main__":
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     async def test_ranking():
         ranker = PhotoRanker()
         rankings = await ranker.rank_photos("Broken Collarbone")
-        print("\nTop 3 Images (updated in google_images_data.json):")
+        print("\nTop 5 Images (updated in google_images_data.json):")
         for rank, image in enumerate(rankings, 1):
             print(f"\nRank {rank}:")
             print(f"File: {image['image_file']}")
