@@ -16,10 +16,52 @@ def process_text(request):
     try:
         data = json.loads(request.body)
         original_text = data.get('text', '')
+        process_all_levels = data.get('process_all_levels', False)
         
-        # Step 1: Simplify
+        translations = []
+        
+        # Process all levels if requested
+        if process_all_levels:
+            levels = ['easy', 'intermediate', 'advanced']
+            for level in levels:
+                # Step 1: Simplify based on level
+                simplify_message.load_env()
+                if level == 'easy':
+                    simplified_text = simplify_message.simplify_message_easy(original_text)
+                elif level == 'intermediate':
+                    simplified_text = simplify_message.simplify_message_intermediate(original_text)
+                else:  # advanced
+                    simplified_text = simplify_message.simplify_message_advanced(original_text)
+                
+                # Step 2: Translate
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './api/hoo-hacks.json'
+                translated_text = translate_message.translate_text(simplified_text, "en")
+                
+                # Step 3: Calculate similarity
+                similarity_score = text_similarity.calculate_similarity(original_text, translated_text)
+                
+                translations.append({
+                    'level': level,
+                    'translated_text': translated_text,
+                    'similarity_score': similarity_score
+                })
+            
+            return JsonResponse({
+                'original_text': original_text,
+                'translations': translations,
+                'status': 'success'
+            })
+        
+        # Handle single level case (backwards compatibility)
+        level = data.get('level', 'easy')
+        # Step 1: Simplify based on level
         simplify_message.load_env()
-        simplified_text = simplify_message.simplify_message(original_text)
+        if level == 'easy':
+            simplified_text = simplify_message.simplify_message_easy(original_text)
+        elif level == 'intermediate':
+            simplified_text = simplify_message.simplify_message_intermediate(original_text)
+        else:  # advanced
+            simplified_text = simplify_message.simplify_message_advanced(original_text)
         
         # Step 2: Translate
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './api/hoo-hacks.json'
@@ -30,9 +72,9 @@ def process_text(request):
         
         return JsonResponse({
             'original_text': original_text,
-            'simplified_text': simplified_text,
             'translated_text': translated_text,
             'similarity_score': similarity_score,
+            'level': level,
             'status': 'success'
         })
     except Exception as e:

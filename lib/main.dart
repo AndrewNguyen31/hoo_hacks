@@ -51,8 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextProcessingService _textService = TextProcessingService();
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
-  String _processedText = '';
-  double _similarityScore = 0.0;
+  List<Map<String, dynamic>> _translations = [];
   bool _speechEnabled = false;
   bool _isProcessing = false;
 
@@ -73,30 +72,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _processText(String text) async {
     setState(() {
       _isProcessing = true;
+      _text = text;
     });
 
     try {
-      // Process through single API call
       final result = await _textService.processText(text);
       
       setState(() {
+        _isProcessing = false;
         if (result['status'] == 'success') {
-          _processedText = result['translated_text'] ?? 'Translation failed';
-          _similarityScore = result['similarity_score'] ?? 0.0;
+          _translations = List<Map<String, dynamic>>.from(result['translations']);
         } else {
-          _processedText = 'Error: ${result['error'] ?? 'Unknown error'}';
-          _similarityScore = 0.0;
+          _translations = [];
         }
       });
     } catch (e) {
       print('Error processing text: $e');
       setState(() {
-        _processedText = 'Error processing text';
-        _similarityScore = 0.0;
-      });
-    } finally {
-      setState(() {
         _isProcessing = false;
+        _translations = [];
       });
     }
   }
@@ -143,33 +137,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 onMicPressed: _listen,
                 isListening: _isListening,
               ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SelectableText(
-                      'Original: $_text',
-                      style: const TextStyle(fontSize: 18.0),
-                    ),
-                    const SizedBox(height: 20),
-                    if (_isProcessing)
-                      const CircularProgressIndicator()
-                    else ...[
-                      SelectableText(
-                        'Processed: $_processedText',
-                        style: const TextStyle(fontSize: 18.0, color: Colors.blue),
-                      ),
-                      const SizedBox(height: 10),
-                      SelectableText(
-                        'Similarity Score: ${(_similarityScore * 100).toStringAsFixed(1)}%',
-                        style: const TextStyle(fontSize: 16.0, color: Colors.green),
-                      ),
-                    ],
-                  ],
-                ),
+              TranslationCards(
+                originalText: _text,
+                translations: _translations,
+                isProcessing: _isProcessing,
               ),
-              const TranslationCards(),
               const FiguresSection(),
               const AboutSection(),
               const MotivationSection(),
