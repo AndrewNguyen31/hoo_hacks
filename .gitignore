@@ -14,7 +14,12 @@
 .swiftpm/
 migrate_working_dir/
 hoo-hacks.json
-
+assets/images/
+assets/images/image_1.jpg
+assets/images/image_2.jpg
+assets/images/image_3.jpg
+assets/images/image_4.jpg
+assets/metadata/google_images_data.json
 # IntelliJ related
 *.iml
 *.ipr
