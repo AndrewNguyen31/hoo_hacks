@@ -67,8 +67,8 @@ class _TranslationCardsState extends State<TranslationCards> {
           const Text(
             'Translations',
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontSize: 40,
+              fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 20),

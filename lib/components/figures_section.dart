@@ -103,8 +103,8 @@ class _FiguresSectionState extends State<FiguresSection> {
           const SelectableText(
             'Figures & Illustrations',
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontSize: 40,
+              fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 20),
@@ -177,7 +177,28 @@ class _FiguresSectionState extends State<FiguresSection> {
                 },
               ),
             ),
-          ],
+          ] else
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: const Card(
+                  elevation: 4,
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
+                        'No figures yet. Try speaking or typing something!',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
