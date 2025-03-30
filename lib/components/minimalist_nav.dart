@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MinimalistNav extends StatefulWidget implements PreferredSizeWidget {
-  const MinimalistNav({super.key});
+  final Function(String) onSectionClick;
+  
+  const MinimalistNav({
+    super.key,
+    required this.onSectionClick,
+  });
   
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -23,13 +28,16 @@ class _MinimalistNavState extends State<MinimalistNav> {
   @override
   void initState() {
     super.initState();
-    // In Flutter, we would use a ScrollController to detect scrolling
-    // For this example, we'll just set scrolled to false initially
-  }
+    // Add scroll listener to handle navbar color change
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final scrollController = PrimaryScrollController.of(context);
+      scrollController.addListener(() {
+        setState(() {
+          scrolled = scrollController.offset > 50;
+        });
+      });
 
-  void scrollToSection(String id) {
-    // In Flutter, we would use a ScrollController to scroll to a specific section
-    // This would be implemented differently based on your app's structure
+    });
   }
 
   @override
@@ -50,7 +58,7 @@ class _MinimalistNavState extends State<MinimalistNav> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextButton(
-                onPressed: () => scrollToSection(item['id']!),
+                onPressed: () => widget.onSectionClick(item['id']!),
                 child: Text(
                   item['name']!,
                   style: TextStyle(

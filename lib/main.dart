@@ -55,6 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _speechEnabled = false;
   bool _isProcessing = false;
   String _selectedLanguageCode = 'en';
+  final ScrollController _scrollController = ScrollController();
+  final _heroKey = GlobalKey();
+  final _translationsKey = GlobalKey();
+  final _figuresKey = GlobalKey();
+  final _aboutKey = GlobalKey();
+  final _motivationKey = GlobalKey();
 
   @override
   void initState() {
@@ -123,15 +129,46 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void scrollToSection(String id) {
+    final keys = {
+      'home': _heroKey,
+      'translations': _translationsKey,
+      'figures': _figuresKey,
+      'about': _aboutKey,
+      'motivation': _motivationKey,
+    };
+
+    if (keys.containsKey(id)) {
+      final context = keys[id]!.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return RootLayout(
       child: Scaffold(
-        appBar: const MinimalistNav(),
+        appBar: MinimalistNav(
+          onSectionClick: scrollToSection,
+        ),
         body: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             children: [
               HeroWidget(
+                key: _heroKey,
                 onTextSubmit: (text) {
                   setState(() {
                     _text = text;
@@ -144,22 +181,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     _selectedLanguageCode = language.code;
                   });
-                  // Reprocess text with new language if there's existing text
                   if (_text.isNotEmpty && _text != 'Press the button and start speaking') {
                     _processText(_text);
                   }
                 },
               ),
               TranslationCards(
+                key: _translationsKey,
                 originalText: _text,
                 translations: _translations,
                 isProcessing: _isProcessing,
               ),
               FiguresSection(
+                key: _figuresKey,
                 hasTranslation: _translations.isNotEmpty,
               ),
-              const AboutSection(),
-              const MotivationSection(),
+              AboutSection(
+                key: _aboutKey,
+              ),
+              MotivationSection(
+                key: _motivationKey,
+              ),
               PageTransition(child: Container()),
             ],
           ),

@@ -1,12 +1,20 @@
 [
     {
+        "image_description": "Ventricular septal defect (VSD) - Symptoms & causes - Mayo Clinic",
+        "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
+        "source_name": "mayoclinic.org",
+        "image_file": "../assets/images/image_2.jpg",
+        "ai_description": "This diagrammatic image illustrates a transverse section of the heart, demonstrating a ventricular septal defect (VSD).\n",
+        "similarity_score": 0.799812912940979
+    },
+    {
         "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
         "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
         "source_name": "mayoclinic.org",
         "image_file": "../assets/images/image_1.jpg"
     },
     {
-        "image_description": "Ventricular septal defect (VSD) - Symptoms & causes - Mayo Clinic",
+        "image_description": "Ventricular Septal Defect (VSD) | American Heart Association",
         "source_url": "https://www.mayoclinic.org/diseases-conditions/ventricular-septal-defect/symptoms-causes/syc-20353495",
         "source_name": "mayoclinic.org",
         "image_file": "../assets/images/image_2.jpg"
