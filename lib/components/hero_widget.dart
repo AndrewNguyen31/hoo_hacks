@@ -226,8 +226,11 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen height
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     return Container(
-      height: 800,
+      height: screenHeight,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: const Alignment(-1.5, -1.5),
@@ -274,233 +277,235 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
           
           // Content
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'MediSpeak',
-                  style: TextStyle(
-                    fontSize: 64,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black26,
-                        blurRadius: 15,
-                        offset: Offset(3, 3),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'MediSpeak',
+                    style: TextStyle(
+                      fontSize: 64,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 1.2,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black26,
+                          blurRadius: 15,
+                          offset: Offset(3, 3),
+                        ),
+                        Shadow(
+                          color: Colors.black12,
+                          blurRadius: 20,
+                          offset: Offset(5, 5),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Where we ',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w900,
+                          color: Colors.yellow,
+                          letterSpacing: 0.5,
+                          height: 1.2,
+                        ),
                       ),
-                      Shadow(
-                        color: Colors.black12,
-                        blurRadius: 20,
-                        offset: Offset(5, 5),
+                      TypewriterText(
+                        phrases: const [
+                          'break the language barrier',
+                          'bring clarity in care',
+                        ],
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontFamily: 'Roboto',
+                        ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Where we ',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w900,
-                        color: Colors.yellow,
-                        letterSpacing: 0.5,
-                        height: 1.2,
-                      ),
-                    ),
-                    TypewriterText(
-                      phrases: const [
-                        'break the language barrier',
-                        'bring clarity in care',
-                      ],
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                        controller: _textController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type your text here...',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                          isDense: true,
-                        ),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_textController.text.isNotEmpty && widget.onTextSubmit != null) {
-                            widget.onTextSubmit!(_textController.text);
-                            _textController.clear();
-                          }
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                            if (states.contains(WidgetState.hovered)) {
-                              return const Color(0xFFFF006E);
-                            }
-                            return const Color(0xFF007FFF);
-                          }),
-                          foregroundColor: WidgetStateProperty.all(Colors.white),
-                          shape: WidgetStateProperty.all(
-                            const RoundedRectangleBorder(
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: _textController,
+                          decoration: const InputDecoration(
+                            hintText: 'Type your text here...',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
                               borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30),
-                                bottomRight: Radius.circular(30),
+                                topLeft: Radius.circular(30),
+                                bottomLeft: Radius.circular(30),
                               ),
+                              borderSide: BorderSide.none,
                             ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                            isDense: true,
                           ),
-                          padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
-                          minimumSize: WidgetStateProperty.all(const Size(52, 52)),
-                          elevation: WidgetStateProperty.all(0),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        child: const Icon(Icons.arrow_forward, size: 24),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    SizedBox(
-                      height: 52,
-                      child: AnimatedBuilder(
-                        animation: _pulseController,
-                        builder: (context, child) {
-                          final scale = widget.isListening 
-                              ? 1.0 + (math.sin(_pulseController.value * 2 * math.pi) * 0.05)
-                              : 1.0;
-                          
-                          return Transform.scale(
-                            scale: scale,
-                            child: ElevatedButton(
-                              onPressed: widget.onMicPressed,
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                                  if (states.contains(WidgetState.hovered)) {
-                                    return const Color(0xFFFF006E);
-                                  }
-                                  if (widget.isListening) {
-                                    return const Color(0xFFFF006E);
-                                  }
-                                  return const Color(0xFF007FFF);
-                                }),
-                                foregroundColor: WidgetStateProperty.all(Colors.white),
-                                shape: WidgetStateProperty.all(
-                                  const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                                  ),
-                                ),
-                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24)),
-                                minimumSize: WidgetStateProperty.all(const Size(200, 52)),
-                                elevation: WidgetStateProperty.all(0),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    widget.isListening ? Icons.mic_off : Icons.mic_none,
-                                    size: 24,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    widget.isListening ? 'Stop Listening' : 'Start Speaking',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                if (_isLoading)
-              const SizedBox(
-                height: 52,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              )
-            else
-              Container(
-                height: 52,
-                width: 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(30),
-                    onTap: () {
-                      showSearch(
-                        context: context,
-                        delegate: _LanguageSearchDelegate(
-                          languages: _languages,
-                          onSelected: (Language? newValue) {
-                            setState(() {
-                              _selectedLanguage = newValue;
-                            });
-                            if (newValue != null && widget.onLanguageChanged != null) {
-                              widget.onLanguageChanged!(newValue);
+                      SizedBox(
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_textController.text.isNotEmpty && widget.onTextSubmit != null) {
+                              widget.onTextSubmit!(_textController.text);
+                              _textController.clear();
                             }
                           },
-                          selectedLanguage: _selectedLanguage,
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _selectedLanguage?.name ?? 'Select Language',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                              if (states.contains(WidgetState.hovered)) {
+                                return const Color(0xFFFF006E);
+                              }
+                              return const Color(0xFF007FFF);
+                            }),
+                            foregroundColor: WidgetStateProperty.all(Colors.white),
+                            shape: WidgetStateProperty.all(
+                              const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(30),
+                                  bottomRight: Radius.circular(30),
+                                ),
                               ),
-                              overflow: TextOverflow.ellipsis,
+                            ),
+                            padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
+                            minimumSize: WidgetStateProperty.all(const Size(52, 52)),
+                            elevation: WidgetStateProperty.all(0),
+                          ),
+                          child: const Icon(Icons.arrow_forward, size: 24),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      SizedBox(
+                        height: 52,
+                        child: AnimatedBuilder(
+                          animation: _pulseController,
+                          builder: (context, child) {
+                            final scale = widget.isListening 
+                                ? 1.0 + (math.sin(_pulseController.value * 2 * math.pi) * 0.05)
+                                : 1.0;
+                            
+                            return Transform.scale(
+                              scale: scale,
+                              child: ElevatedButton(
+                                onPressed: widget.onMicPressed,
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                                    if (states.contains(WidgetState.hovered)) {
+                                      return const Color(0xFFFF006E);
+                                    }
+                                    if (widget.isListening) {
+                                      return const Color(0xFFFF006E);
+                                    }
+                                    return const Color(0xFF007FFF);
+                                  }),
+                                  foregroundColor: WidgetStateProperty.all(Colors.white),
+                                  shape: WidgetStateProperty.all(
+                                    const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                                    ),
+                                  ),
+                                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24)),
+                                  minimumSize: WidgetStateProperty.all(const Size(200, 52)),
+                                  elevation: WidgetStateProperty.all(0),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      widget.isListening ? Icons.mic_off : Icons.mic_none,
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      widget.isListening ? 'Stop Listening' : 'Start Speaking',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  if (_isLoading)
+                    const SizedBox(
+                      height: 52,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      height: 52,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(30),
+                          onTap: () {
+                            showSearch(
+                              context: context,
+                              delegate: _LanguageSearchDelegate(
+                                languages: _languages,
+                                onSelected: (Language? newValue) {
+                                  setState(() {
+                                    _selectedLanguage = newValue;
+                                  });
+                                  if (newValue != null && widget.onLanguageChanged != null) {
+                                    widget.onLanguageChanged!(newValue);
+                                  }
+                                },
+                                selectedLanguage: _selectedLanguage,
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _selectedLanguage?.name ?? 'Select Language',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const Icon(Icons.language, color: Colors.black87),
+                              ],
                             ),
                           ),
-                          const Icon(Icons.language, color: Colors.black87),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                ],
               ),
-          ],
             ),
           ),
         ],
