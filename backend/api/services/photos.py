@@ -1,7 +1,7 @@
 import asyncio
 import json
 import os
-import shutil
+
 from aiohttp import ClientSession, ClientTimeout
 from urllib.parse import urlparse, urlencode
 from playwright.async_api import async_playwright
@@ -64,29 +64,6 @@ class PhotoExtractor:
                 await asyncio.sleep(2**attempt)
         print(f"Failed to download image from {img_url} after {retries} attempts.")
         return None
-
-    # Function to scroll to the bottom of the page
-    async def scroll_to_bottom(self, page):
-        """
-        Scroll to the bottom of the web page using Playwright.
-
-        Args:
-            page (Page): The Playwright page object to scroll.
-
-        Returns:
-            None
-        """
-        print("Scrolling...")
-        previous_height = await page.evaluate("document.body.scrollHeight")
-        while True:
-            # Scroll to the bottom of the page
-            await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-            await asyncio.sleep(1)
-            new_height = await page.evaluate("document.body.scrollHeight")
-            if new_height == previous_height:
-                break
-            previous_height = new_height
-        print("Reached the bottom of the page.")
 
     # Main function to scrape Google Images
     async def scrape_google_images(self, search_query="Doctor", timeout_duration=10):
@@ -199,6 +176,6 @@ class PhotoExtractor:
             print(f"Finished downloading {images_downloaded} images.")
             await browser.close()
 
-# Create an instance and run
-extractor = PhotoExtractor()
-asyncio.run(extractor.scrape_google_images(search_query="Broken Collarbone", timeout_duration=10))
+# # Create an instance and run
+# extractor = PhotoExtractor()
+# asyncio.run(extractor.scrape_google_images(search_query="Broken Collarbone", timeout_duration=10))

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class FiguresSection extends StatefulWidget {
-  const FiguresSection({super.key});
+  final bool hasTranslation;
+  
+  const FiguresSection({
+    super.key,
+    this.hasTranslation = false,
+  });
 
   @override
   State<FiguresSection> createState() => _FiguresSectionState();
@@ -16,48 +23,60 @@ class _FiguresSectionState extends State<FiguresSection> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(FiguresSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Start or stop checking for images based on hasTranslation
+    if (widget.hasTranslation && !oldWidget.hasTranslation) {
+      _startCheckingImages();
+    } else if (!widget.hasTranslation && oldWidget.hasTranslation) {
+      _stopCheckingImages();
+    }
+  }
+
+  void _startCheckingImages() {
     // Start checking for images every second
     _checkImagesTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       checkForImages();
     });
   }
 
+  void _stopCheckingImages() {
+    _checkImagesTimer?.cancel();
+  }
+
   @override
   void dispose() {
-    _checkImagesTimer?.cancel();
+    _stopCheckingImages();
     _scrollController.dispose();
     super.dispose();
   }
 
-  void checkForImages() {
-    // Try to load images that start with 'image_'
-    List<Map<String, dynamic>> newFigures = [];
-    
-    // Try loading images from 1 to 5
-    for (int i = 1; i <= 7; i++) {
-      String imagePath = 'assets/images/image_$i.jpg';
-      // Check if image exists by trying to load it
-      try {
-        // Add to figures list if not already present
-        if (!figures.any((f) => f['src'] == imagePath)) {
-          newFigures.add({
-            'id': i,
-            'src': imagePath,
-            'alt': 'Medical Image $i',
-            'caption': 'Medical Image $i',
-          });
-        }
-      } catch (e) {
-        // Image doesn't exist, skip it
-        continue;
-      }
-    }
+  Future<void> checkForImages() async {
+    try {
+      // Load the metadata file
+      final String jsonString = await rootBundle.loadString('assets/metadata/google_images_data.json');
+      final List<dynamic> imageData = json.decode(jsonString);
+      
+      // Convert the data to our figures format
+      List<Map<String, dynamic>> newFigures = imageData.map((data) => {
+        'id': data['image_file'].split('_')[1].split('.')[0],
+        'src': data['image_file'],
+        'alt': data['image_description'],
+        'caption': data['ai_description'] ?? data['image_description'],
+        'similarity_score': data['similarity_score'],
+      }).toList();
 
-    // Update state if new images were found
-    if (newFigures.isNotEmpty) {
-      setState(() {
-        figures.addAll(newFigures);
-      });
+      // Update state if we have new figures
+      if (newFigures.isNotEmpty) {
+        setState(() {
+          figures = newFigures;
+        });
+      }
+    } catch (e) {
+      print('Error loading images: $e');
     }
   }
 
@@ -75,6 +94,16 @@ class _FiguresSectionState extends State<FiguresSection> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    }
+  }
+
+  Color getScoreColor(double score) {
+    if (score >= 0.7) {
+      return Colors.green;
+    } else if (score >= 0.5) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
     }
   }
 
@@ -166,13 +195,33 @@ class _FiguresSectionState extends State<FiguresSection> {
                             color: Colors.white,
                             borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
                           ),
-                          child: SelectableText(
-                            figure['caption'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SelectableText(
+                                figure['caption'] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: getScoreColor(figure['similarity_score']).withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'Relevance: ${(figure['similarity_score'] * 100).toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: getScoreColor(figure['similarity_score']),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

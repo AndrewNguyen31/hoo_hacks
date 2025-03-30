@@ -155,7 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 translations: _translations,
                 isProcessing: _isProcessing,
               ),
-              const FiguresSection(),
+              FiguresSection(
+                hasTranslation: _translations.isNotEmpty,
+              ),
               const AboutSection(),
               const MotivationSection(),
               PageTransition(child: Container()),

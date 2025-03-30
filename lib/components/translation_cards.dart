@@ -83,17 +83,22 @@ class _TranslationCardsState extends State<TranslationCards> {
               ),
             )
           else if (widget.translations.isEmpty)
-            const Card(
-              elevation: 4,
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Center(
-                  child: Text(
-                    'No translations yet. Try speaking or typing something!',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: const Card(
+                  elevation: 4,
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
+                        'No translations yet. Try speaking or typing something!',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
                   ),
                 ),

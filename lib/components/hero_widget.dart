@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as math;
+import '../models/language.dart';
+import '../services/language_service.dart';
 
 class AnimatedCircle extends StatefulWidget {
   final double radius;
@@ -138,8 +140,6 @@ class _FloatingSphereState extends State<FloatingSphere> with SingleTickerProvid
     );
   }
 }
-import '../models/language.dart';
-import '../services/language_service.dart';
 
 class HeroWidget extends StatefulWidget {
   final Function(String)? onTextSubmit;

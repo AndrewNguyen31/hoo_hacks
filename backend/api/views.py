@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from .services.text_similarity import TextSimilarity
 from .services.simplify_message import SimplifyMessage
 from .services.translate_message import TranslateMessage
+from .services.photos import PhotoExtractor
+from .services.rank_photos import PhotoRanker
+import asyncio
 
 import html
 import json
@@ -11,6 +14,8 @@ import os
 text_similarity = TextSimilarity()
 simplify_message = SimplifyMessage()
 translate_message = TranslateMessage()
+photo_extractor = PhotoExtractor()
+photo_ranker = PhotoRanker()
 
 @api_view(['POST'])
 def process_text(request):
@@ -19,6 +24,13 @@ def process_text(request):
         original_text = data.get('text', '')
         process_all_levels = data.get('process_all_levels', False)
         target_language = data.get('language', 'en')  # Get target language from request
+        
+        # Extract simple idea for image search
+        simple_idea = simplify_message.extract_idea(original_text)
+        
+        # Start image scraping in the background
+        asyncio.run(photo_extractor.scrape_google_images(search_query=simple_idea, timeout_duration=10))
+        asyncio.run(photo_ranker.rank_photos(simple_idea))
         
         translations = []
         
@@ -89,3 +101,4 @@ def process_text(request):
             'error': str(e),
             'status': 'error'
         }, status=400)
+        
