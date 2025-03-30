@@ -76,7 +76,7 @@ class MotivationSection extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 23,
                             fontWeight: FontWeight.w600,
-                            color: Colors.blue,
+                            color: Color(0xFF007FFF),
                             height: 1.2,
                           ),
                           textAlign: TextAlign.center,

@@ -299,15 +299,31 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                   ),
                 ),
                 const SizedBox(height: 10),
-                TypewriterText(
-                  phrases: const [
-                    'Breaking the barrier',
-                    'Bringing clarity in care!',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Where we ',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w900,
+                        color: Colors.yellow,
+                        letterSpacing: 0.5,
+                        height: 1.2,
+                      ),
+                    ),
+                    TypewriterText(
+                      phrases: const [
+                        'break the language barrier',
+                        'bring clarity in care',
+                      ],
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontFamily: 'Roboto',
+                      ),
+                    ),
                   ],
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Roboto',
-                  ),
                 ),
                 const SizedBox(height: 40),
                 Row(
@@ -348,7 +364,7 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                             if (states.contains(WidgetState.hovered)) {
                               return const Color(0xFFFF006E);
                             }
-                            return const Color(0xFF4A7DFF);
+                            return const Color(0xFF007FFF);
                           }),
                           foregroundColor: WidgetStateProperty.all(Colors.white),
                           shape: WidgetStateProperty.all(
@@ -388,7 +404,7 @@ class _HeroWidgetState extends State<HeroWidget> with SingleTickerProviderStateM
                                   if (widget.isListening) {
                                     return const Color(0xFFFF006E);
                                   }
-                                  return const Color(0xFF4A7DFF);
+                                  return const Color(0xFF007FFF);
                                 }),
                                 foregroundColor: WidgetStateProperty.all(Colors.white),
                                 shape: WidgetStateProperty.all(
